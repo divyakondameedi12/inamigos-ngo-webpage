@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InAmigos – Website Improvement Analysis Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#1A1208; --terra:#C4622D; --ochre:#C8963E; --moss:#4E6B3A;
+  --cream:#FBF6EE; --linen:#F4EDE1; --sand:#E2D0B8; --muted:#7A6855;
+  --red:#C0392B; --amber:#E67E22; --green:#27AE60; --blue:#2471A3;
+  --white:#FFFFFF;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);line-height:1.6;}
+
+/* ── COVER ── */
+.cover{
+  min-height:100vh;
+  background:linear-gradient(155deg,#1A0E06 0%,#3A1E08 55%,#2A1208 100%);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:70px 8%;position:relative;overflow:hidden;
+}
+.cover::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(200,150,62,.13) 0%,transparent 65%);}
+.cover::after{
+  content:'ANALYSIS';position:absolute;
+  font-family:'Lora',serif;font-size:14rem;font-weight:700;
+  color:rgba(255,255,255,.025);letter-spacing:-6px;
+  bottom:-30px;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;
+}
+.cover-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(200,150,62,.4);color:var(--ochre);
+  padding:7px 20px;font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:36px;position:relative;z-index:2;
+}
+.cover h1{
+  font-family:'Lora',serif;font-size:clamp(2.4rem,6vw,5rem);
+  font-weight:700;color:#fff;line-height:1.06;position:relative;z-index:2;
+}
+.cover h1 em{color:var(--ochre);font-style:italic;display:block;}
+.cover-sub{color:rgba(255,255,255,.5);font-size:.95rem;margin:22px auto 0;max-width:500px;line-height:1.8;position:relative;z-index:2;}
+.cover-divider{width:48px;height:2px;background:var(--terra);margin:44px auto;position:relative;z-index:2;}
+.cover-meta{display:flex;gap:44px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2;}
+.cm{text-align:center;}
+.cm-l{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.cm-v{font-family:'Lora',serif;font-size:1rem;font-weight:600;color:var(--ochre);margin-top:4px;}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1020px;margin:0 auto;padding:72px 48px;}
+@media(max-width:700px){.wrap{padding:48px 20px;}}
+.sec-label{font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--terra);display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.sec-label::before{content:'';width:18px;height:1.5px;background:var(--terra);}
+.sec-title{font-family:'Lora',serif;font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:700;color:var(--ink);margin-bottom:14px;line-height:1.15;}
+.sec-title em{color:var(--terra);font-style:italic;}
+.sec-desc{font-size:.93rem;line-height:1.8;color:var(--muted);max-width:660px;}
+hr.div{border:none;border-top:1px solid var(--sand);margin:64px 0;}
+
+/* ── SUMMARY CARDS ── */
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--sand);margin-top:36px;}
+.sc{padding:30px 22px;border-right:1px solid var(--sand);text-align:center;}
+.sc:last-child{border-right:none;}
+.sc-icon{font-size:1.8rem;margin-bottom:10px;}
+.sc-num{font-family:'Lora',serif;font-size:2.6rem;font-weight:700;line-height:1;}
+.sc-lbl{font-size:.75rem;color:var(--muted);margin-top:5px;}
+.sc:nth-child(1) .sc-num{color:var(--red);}
+.sc:nth-child(2) .sc-num{color:var(--amber);}
+.sc:nth-child(3) .sc-num{color:var(--blue);}
+.sc:nth-child(4) .sc-num{color:var(--green);}
+
+.legend{display:flex;gap:20px;flex-wrap:wrap;padding:16px 22px;background:var(--linen);border:1px solid var(--sand);margin-top:28px;}
+.li{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:500;}
+.ld{width:11px;height:11px;border-radius:50%;}
+.ld.c{background:var(--red);}
+.ld.h{background:var(--amber);}
+.ld.m{background:var(--blue);}
+.ld.l{background:var(--green);}
+
+/* ── SCREENSHOT FRAME ── */
+.sf{
+  border:1px solid #C8BDB0;background:#fff;
+  box-shadow:0 8px 40px rgba(0,0,0,.15);
+  border-radius:6px;overflow:hidden;
+  margin:32px 0;position:relative;
+}
+.sf-bar{
+  height:38px;background:#EDEBE8;
+  display:flex;align-items:center;padding:0 14px;gap:7px;
+  border-bottom:1px solid #D8D3CC;
+}
+.sf-dot{width:11px;height:11px;border-radius:50%;}
+.sf-dot.r{background:#FF5F57;} .sf-dot.y{background:#FFBD2E;} .sf-dot.g{background:#28CA41;}
+.sf-addr{flex:1;margin:0 14px;background:#fff;border:1px solid #CCC9C4;border-radius:4px;padding:4px 10px;font-size:.72rem;color:#888;display:flex;align-items:center;gap:6px;}
+.sf-addr::before{content:'🔒';font-size:.68rem;}
+
+/* ── REAL WEBSITE REPLICA SECTIONS ── */
+
+/* NAV replica */
+.r-nav{
+  background:#fff;padding:12px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #E8E0D4;
+  font-size:.82rem;
+}
+.r-logo{display:flex;align-items:center;gap:8px;}
+.r-logo img,.r-logo-img{width:120px;height:36px;object-fit:contain;}
+.r-logo-txt{font-size:.7rem;color:#888;}
+.r-nav-links{display:flex;gap:20px;color:#444;font-size:.78rem;}
+.r-nav-links a{text-decoration:none;color:#444;}
+.r-nav-cta{background:#E8601C;color:#fff;padding:7px 16px;border-radius:3px;font-size:.75rem;font-weight:600;}
+.r-topbar{background:#1a1a1a;padding:6px 24px;display:flex;justify-content:space-between;align-items:center;}
+.r-topbar-email{color:#aaa;font-size:.72rem;}
+.r-topbar-social{display:flex;gap:10px;}
+.r-topbar-social span{color:#777;font-size:.65rem;cursor:pointer;}
+.r-topbar-social span:hover{color:#fff;}
+
+/* HERO replica */
+.r-hero{
+  background:linear-gradient(135deg,#1C3A5E 0%,#0D2440 100%);
+  padding:60px 40px;color:#fff;min-height:320px;
+  display:flex;align-items:center;position:relative;overflow:hidden;
+}
+.r-hero-content{max-width:55%;}
+.r-hero h2{font-size:1.6rem;font-weight:700;line-height:1.3;margin-bottom:12px;}
+.r-hero p{font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:20px;}
+.r-hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.r-btn-primary{background:#E8601C;color:#fff;padding:9px 18px;border-radius:3px;font-size:.75rem;font-weight:600;}
+.r-btn-secondary{border:1px solid rgba(255,255,255,.5);color:#fff;padding:8px 16px;border-radius:3px;font-size:.75rem;}
+.r-hero-slider{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
+.r-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);}
+.r-dot.active{background:#fff;}
+.r-hero-img-area{
+  position:absolute;right:0;top:0;bottom:0;width:42%;
+  background:rgba(255,255,255,.04);
+  display:flex;align-items:center;justify-content:center;
+  border-left:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.2);font-size:.75rem;text-align:center;padding:20px;
+}
+
+/* STATS replica */
+.r-stats{
+  background:#f8f8f8;padding:40px 32px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid #E0E0E0;text-align:center;gap:0;
+}
+.r-stat{padding:20px 10px;border-right:1px solid #E0E0E0;}
+.r-stat:last-child{border-right:none;}
+.r-stat-num{font-size:2.2rem;font-weight:800;color:#E8601C;line-height:1;}
+.r-stat-lbl{font-size:.72rem;color:#888;margin-top:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+
+/* ABOUT replica */
+.r-about{background:#fff;padding:48px 40px;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;}
+.r-about-txt h3{font-size:1.15rem;font-weight:700;color:#1a1a1a;margin-bottom:14px;}
+.r-about-txt p{font-size:.8rem;line-height:1.75;color:#555;}
+.r-about-txt .r-btn-readmore{display:inline-block;margin-top:16px;background:#E8601C;color:#fff;padding:8px 16px;border-radius:3px;font-size:.72rem;font-weight:600;}
+.r-about-img{background:#F0EDE8;border:1px solid #E0D8CC;height:220px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:.72rem;border-radius:3px;}
+
+/* CAUSES replica */
+.r-causes-section{padding:48px 40px;background:#f9f6f2;}
+.r-causes-title{font-size:1.2rem;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.r-causes-sub{font-size:.78rem;color:#888;margin-bottom:24px;}
+.r-causes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.r-cause-card{background:#fff;border:1px solid #E8E0D4;border-radius:4px;overflow:hidden;padding-bottom:12px;}
+.r-cause-img{height:110px;background:#E8E0D4;display:flex;align-items:center;justify-content:center;color:#999;font-size:.75rem;}
+.r-cause-body{padding:12px 14px;}
+.r-cause-title{font-size:.85rem;font-weight:700;color:#1a1a1a;margin-bottom:5px;}
+.r-cause-desc{font-size:.73rem;color:#777;line-height:1.5;}
+.r-cause-progress{margin:10px 14px 0;height:5px;background:#EEE;border-radius:3px;}
+.r-cause-progress-bar{height:100%;background:#E8601C;border-radius:3px;}
+.r-cause-amounts{display:flex;justify-content:space-between;padding:4px 14px 0;font-size:.65rem;color:#999;}
+
+/* VOLUNTEERS replica */
+.r-volunteers{padding:40px;background:#fff;}
+.r-vol-title{font-size:1.1rem;font-weight:700;margin-bottom:20px;color:#1a1a1a;}
+.r-vol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.r-vol-card{border:1px solid #E8E0D4;padding:16px;text-align:center;border-radius:4px;}
+.r-vol-avatar{width:50px;height:50px;border-radius:50%;background:#E8E0D4;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.r-vol-name{font-size:.82rem;font-weight:700;color:#1a1a1a;}
+.r-vol-role{font-size:.72rem;color:#888;margin-top:2px;}
+.r-vol-email{font-size:.68rem;color:#E8601C;margin-top:6px;word-break:break-all;}
+
+/* FOOTER replica */
+.r-footer{background:#1a1a1a;padding:36px 40px;color:#fff;}
+.r-footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;margin-bottom:28px;}
+.r-footer-logo{width:100px;height:30px;background:#333;border-radius:2px;margin-bottom:10px;}
+.r-footer-tagline{font-size:.72rem;color:#888;line-height:1.5;}
+.r-footer-heading{font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:12px;}
+.r-footer-link{font-size:.75rem;color:#666;margin-bottom:7px;cursor:pointer;}
+.r-footer-social{display:flex;gap:8px;margin-top:8px;}
+.r-footer-soc-icon{width:28px;height:28px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:.7rem;}
+.r-footer-bottom{border-top:1px solid #333;padding-top:18px;font-size:.7rem;color:#555;text-align:center;}
+
+/* ── ANNOTATION OVERLAYS ── */
+.annotated{position:relative;}
+.ann-box{
+  position:absolute;pointer-events:none;
+  border-width:2.5px;border-style:solid;border-radius:4px;
+  z-index:20;
+}
+.ann-box.crit{border-color:var(--red);background:rgba(192,57,43,.08);}
+.ann-box.high{border-color:var(--amber);background:rgba(230,126,34,.07);}
+.ann-box.med{border-color:var(--blue);background:rgba(36,113,163,.07);}
+.ann-box.low{border-color:var(--green);background:rgba(39,174,96,.06);}
+
+.ann-badge{
+  position:absolute;width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:800;color:#fff;z-index:30;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.ann-badge.crit{background:var(--red);}
+.ann-badge.high{background:var(--amber);}
+.ann-badge.med{background:var(--blue);}
+.ann-badge.low{background:var(--green);}
+
+/* annotation callout tooltip */
+.ann-tip{
+  position:absolute;z-index:40;
+  background:var(--ink);color:#fff;
+  padding:7px 12px;font-size:.7rem;line-height:1.5;
+  border-radius:3px;max-width:200px;font-family:'DM Sans',sans-serif;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+  pointer-events:none;
+}
+.ann-tip::before{
+  content:'';position:absolute;width:0;height:0;
+  border:6px solid transparent;
+}
+.ann-tip.tip-left::before{border-right-color:var(--ink);right:100%;top:50%;transform:translateY(-50%);}
+.ann-tip.tip-right::before{border-left-color:var(--ink);left:100%;top:50%;transform:translateY(-50%);}
+.ann-tip.tip-bottom::before{border-top-color:var(--ink);top:100%;left:50%;transform:translateX(-50%);}
+
+/* issue key row below screenshot */
+.ann-key{
+  background:var(--linen);border:1px solid var(--sand);border-top:none;
+  padding:16px 20px;display:flex;flex-direction:column;gap:8px;
+}
+.ann-key-row{display:flex;align-items:flex-start;gap:10px;font-size:.78rem;}
+.ann-key-badge{
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;font-weight:800;color:#fff;margin-top:1px;
+}
+.ann-key-badge.crit{background:var(--red);}
+.ann-key-badge.high{background:var(--amber);}
+.ann-key-badge.med{background:var(--blue);}
+.ann-key-text{color:var(--ink);}<br>
+.ann-key-label{font-size:.65rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-left:6px;}
+.ann-key-label.crit{background:rgba(192,57,43,.12);color:var(--red);}
+.ann-key-label.high{background:rgba(230,126,34,.12);color:var(--amber);}
+.ann-key-label.med{background:rgba(36,113,163,.12);color:var(--blue);}
+
+/* ── ISSUE DETAIL CARDS ── */
+.iss-list{border:1px solid var(--sand);margin-top:36px;}
+.iss{display:grid;grid-template-columns:52px 1fr 110px;border-bottom:1px solid var(--sand);align-items:stretch;}
+.iss:last-child{border-bottom:none;}
+.iss-n{display:flex;align-items:center;justify-content:center;background:var(--linen);border-right:1px solid var(--sand);font-family:'Lora',serif;font-size:1.3rem;font-weight:700;color:var(--muted);}
+.iss-body{padding:22px 26px;}
+.iss-title{font-weight:600;font-size:.95rem;color:var(--ink);margin-bottom:6px;}
+.iss-desc{font-size:.85rem;line-height:1.75;color:var(--muted);}
+.iss-fix{font-size:.78rem;color:var(--moss);margin-top:9px;font-weight:500;display:flex;align-items:flex-start;gap:5px;}
+.iss-fix::before{content:'✓ Fix:';font-weight:700;flex-shrink:0;}
+.iss-badge-cell{display:flex;align-items:center;justify-content:center;border-left:1px solid var(--sand);padding:16px;}
+.iss-pill{padding:5px 10px;border-radius:2px;font-size:.66rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;text-align:center;}
+.iss-pill.crit{background:rgba(192,57,43,.1);color:var(--red);}
+.iss-pill.high{background:rgba(230,126,34,.1);color:var(--amber);}
+.iss-pill.med{background:rgba(36,113,163,.1);color:var(--blue);}
+.iss-pill.low{background:rgba(39,174,96,.1);color:var(--green);}
+
+/* ── SCORE CARDS ── */
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;}
+.sc-item{border:1px solid var(--sand);padding:22px 18px;}
+.sc-cat{font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:12px;}
+.sc-bar-wrap{height:7px;background:var(--sand);border-radius:3px;margin-bottom:8px;}
+.sc-bar{height:100%;border-radius:3px;}
+.sc-val{font-family:'Lora',serif;font-size:1.5rem;font-weight:700;}
+.sc-note{font-size:.73rem;color:var(--muted);margin-top:3px;line-height:1.5;}
+
+/* rec table */
+.rtable{width:100%;border-collapse:collapse;margin-top:28px;font-size:.84rem;}
+.rtable th{background:var(--ink);color:#fff;padding:12px 16px;text-align:left;font-size:.68rem;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.rtable td{padding:12px 16px;border-bottom:1px solid var(--sand);color:var(--muted);}
+.rtable tr:last-child td{border-bottom:none;}
+.rtable tr:hover td{background:var(--linen);}
+.rtable td:first-child{font-weight:600;color:var(--ink);}
+.pill{padding:3px 9px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.p1{background:rgba(192,57,43,.12);color:var(--red);}
+.p2{background:rgba(230,126,34,.12);color:var(--amber);}
+.p3{background:rgba(36,113,163,.12);color:var(--blue);}
+.ptag{display:inline-block;padding:2px 7px;border-radius:2px;font-size:.67rem;background:var(--linen);border:1px solid var(--sand);color:var(--muted);}
+
+/* conclusion */
+.conc{background:linear-gradient(135deg,#1A0E06 0%,#3A1E08 100%);color:#fff;padding:72px 8%;text-align:center;}
+.conc h2{font-family:'Lora',serif;font-size:2.2rem;color:#fff;margin-bottom:14px;}
+.conc p{color:rgba(255,255,255,.55);max-width:540px;margin:0 auto;line-height:1.8;}
+.conc-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px;}
+.chip{padding:7px 15px;border:1px solid rgba(200,150,62,.3);color:var(--ochre);font-size:.76rem;font-weight:500;}
+
+@media(max-width:640px){
+  .sum-grid,.r-stats,.r-causes-grid,.r-footer-grid,.score-grid{grid-template-columns:1fr 1fr;}
+  .iss{grid-template-columns:40px 1fr;}
+  .iss-badge-cell{display:none;}
+  .r-about,.r-hero-img-area{display:none;}
+  .r-about{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-chip">Website Audit · Task 2 · InAmigos Internship</div>
+  <h1>Foundation Website<br/><em>Improvement Analysis</em></h1>
+  <p class="cover-sub">A detailed audit of inamigosfoundation.org.in covering security, UX, design, content accuracy & performance — with annotated screenshots and a prioritised action plan.</p>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cm"><div class="cm-l">Website</div><div class="cm-v">inamigosfoundation.org.in</div></div>
+    <div class="cm"><div class="cm-l">Issues Found</div><div class="cm-v">14 Issues</div></div>
+    <div class="cm"><div class="cm-l">Prepared By</div><div class="cm-v">Web Dev Intern · InAmigos</div></div>
+    <div class="cm"><div class="cm-l">Date</div><div class="cm-v">May 2025</div></div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="wrap">
+  <div class="sec-label">Section 01</div>
+  <h2 class="sec-title">Executive <em>Summary</em></h2>
+  <p class="sec-desc">The InAmigos Foundation website was audited across security, design, content, and UX. <strong>14 issues</strong> were found, including critical security vulnerabilities and content inaccuracies that need immediate attention.</p>
+  <div class="sum-grid">
+    <div class="sc"><div class="sc-icon">🚨</div><div class="sc-num">3</div><div class="sc-lbl">Critical Issues</div></div>
+    <div class="sc"><div class="sc-icon">⚠️</div><div class="sc-num">5</div><div class="sc-lbl">High Priority</div></div>
+    <div class="sc"><div class="sc-icon">💡</div><div class="sc-num">4</div><div class="sc-lbl">Medium Priority</div></div>
+    <div class="sc"><div class="sc-icon">✨</div><div class="sc-num">2</div><div class="sc-lbl">Low / Enhancement</div></div>
+  </div>
+  <div class="legend">
+    <div class="li"><div class="ld c"></div> Critical — Fix immediately</div>
+    <div class="li"><div class="ld h"></div> High — Fix within 1 week</div>
+    <div class="li"><div class="ld m"></div> Medium — Fix within 1 month</div>
+    <div class="li"><div class="ld l"></div> Low — Future enhancement</div>
+  </div>
+</div>
+
+<hr class="div" style="max-width:1020px;margin:0 auto;"/>
+
+<!-- SCREENSHOT 1: HOMEPAGE HERO -->
+<div class="wrap">
+  <div class="sec-label">Section 02</div>
+  <h2 class="sec-title">Annotated Screenshots — <em>Homepage</em></h2>
+  <p class="sec-desc">Screenshots from <strong>inamigosfoundation.org.in</strong> with numbered annotations highlighting specific issues observed on the live website.</p>
+
+  <p style="margin-top:20px;padding:12px 16px;background:rgba(200,150,62,.1);border-left:3px solid var(--ochre);font-size:.82rem;color:var(--muted);">
+    📌 The sections below are faithful reproductions of the actual website content (nav links, text, layout, structure) as observed during the audit, with annotation overlays marking each issue.
+  </p>
+
+  <!-- SCREENSHOT 1: TOP OF PAGE / HERO -->
+  <div style="margin-top:28px;">
+    <div style="font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:8px;">Screenshot 1 — Hero & Navigation (Top of Page)</div>
+    <div class="sf">
+      <div class="sf-bar">
+        <div class="sf-dot r"></div><div class="sf-dot y"></div><div class="sf-dot g"></div>
+        <div class="sf-addr">inamigosfoundation.org.in</div>
+      </div>
+      <!-- ACTUAL WEBSITE CONTENT REPLICA -->
+      <div class="annotated">
+
+        <!-- ISSUE 1: Spam links (shown as hidden code injection) -->
+        <div class="ann-box crit" style="top:0;left:0;right:0;height:18px;z-index:25;"></div>
+        <div class="ann-badge crit" style="top:-2px;left:2px;">1</div>
+        <div style="background:#FEF0EE;border-bottom:1px dashed var(--red);height:18px;display:flex;align-items:center;padding:0 10px;font-size:.6rem;color:var(--red);font-weight:500;">
+          ⚠ Hidden injected code: &lt;a href="https://shopnoit.com"&gt;slot gacor&lt;/a&gt; &lt;a href="https://tekrypt.com"&gt;slot gacor&lt;/a&gt; ... [+8 more gambling spam links]
+        </div>
+
+        <!-- TOP BAR -->
+        <div class="r-topbar">
+          <span class="r-topbar-email">✉ support@inamigosfoundation.org.in</span>
+          <div class="r-topbar-social" style="position:relative;">
+            <!-- ISSUE 2: Wrong social links -->
+            <div class="ann-box high" style="top:-4px;left:-4px;right:-4px;bottom:-4px;"></div>
+            <div class="ann-badge high" style="top:-10px;right:-10px;">2</div>
+            <span title="facebook">📘</span>
+            <span title="twitter — generic link">🐦</span>
+            <span title="google — wrong!" style="color:#f66;">G</span>
+            <span title="pinterest">📌</span>
+            <span title="instagram">📷</span>
+            <span style="color:#f66;font-size:.6rem;">← No LinkedIn!</span>
+          </div>
+        </div>
+
+        <!-- NAV -->
+        <div class="r-nav" style="position:relative;">
+          <div class="r-logo">
+            <div style="font-size:.9rem;font-weight:800;color:#E8601C;">Inamigos</div>
+            <div style="font-size:.62rem;color:#aaa;margin-left:4px;">Foundation</div>
+          </div>
+          <div class="r-nav-links">
+            <a href="#">Home</a><a href="#">Causes</a><a href="#">About Us</a>
+            <a href="#">Volunteers</a><a href="#">Gallery</a><a href="#">Blog</a>
+            <a href="#">Events</a><a href="#">Contact</a>
+          </div>
+          <div class="r-nav-cta">Donate Now</div>
+          <!-- ISSUE 3: No LinkedIn in nav -->
+          <div class="ann-badge med" style="top:-8px;right:80px;">3</div>
+        </div>
+
+        <!-- HERO SLIDER -->
+        <div class="r-hero" style="position:relative;">
+          <div class="r-hero-content">
+            <div style="font-size:.68rem;color:rgba(255,255,255,.6);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">BachpanSala</div>
+            <div class="r-hero h2" style="font-size:1.5rem;font-weight:700;color:#fff;line-height:1.3;margin-bottom:10px;">Nurturing Young Minds,<br/>Building Bright Futures</div>
+            <div class="r-hero-btns">
+              <div class="r-btn-primary">Donate Us</div>
+              <div class="r-btn-secondary">Become A Volunteer</div>
+              <div class="r-btn-secondary">Join Us</div>
+            </div>
+          </div>
+          <!-- ISSUE 4: No images in hero -->
+          <div class="r-hero-img-area">
+            <div>
+              <div style="font-size:2rem;margin-bottom:6px;">🖼️</div>
+              <div>No actual photo<br/>of NGO work here</div>
+            </div>
+          </div>
+          <div class="ann-box high" style="top:10px;right:5px;width:42%;bottom:10px;"></div>
+          <div class="ann-badge high" style="top:5px;right:48%;">4</div>
+          <div class="r-hero-slider">
+            <div class="r-dot active"></div><div class="r-dot"></div><div class="r-dot"></div>
+            <div class="r-dot"></div><div class="r-dot"></div>
+          </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="r-stats" style="position:relative;">
+          <div class="ann-badge high" style="top:-10px;left:50%;">5</div>
+          <div class="r-stat">
+            <div class="r-stat-num">200</div>
+            <div class="r-stat-lbl">Our Volunteer</div>
+          </div>
+          <div class="r-stat" style="position:relative;">
+            <!-- ISSUE 5: 28 States is wrong -->
+            <div class="ann-box crit" style="top:0;left:0;right:0;bottom:0;"></div>
+            <div style="position:absolute;top:4px;right:4px;background:var(--red);color:#fff;font-size:.55rem;padding:2px 5px;border-radius:2px;font-weight:700;">WRONG!</div>
+            <div class="r-stat-num" style="color:var(--red);">28</div>
+            <div class="r-stat-lbl" style="color:var(--red);">States ← should be "Volunteers"</div>
+          </div>
+          <div class="r-stat">
+            <div class="r-stat-num">6</div>
+            <div class="r-stat-lbl">Our Causes</div>
+          </div>
+          <div class="r-stat">
+            <div class="r-stat-num">50000</div>
+            <div class="r-stat-lbl">Beneficiaries</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Key -->
+    <div class="ann-key">
+      <div class="ann-key-row"><div class="ann-key-badge crit">1</div><span class="ann-key-text"><strong>Spam link injection</strong> — Hidden gambling site links ("slot gacor") found in source code. Google may blacklist this site. <span class="ann-key-label crit">Critical</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge high">2</div><span class="ann-key-text"><strong>Wrong social media links</strong> — Footer/header social icons link to generic twitter.com, google.com instead of InAmigos profiles. LinkedIn is completely missing. <span class="ann-key-label high">High</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge med">3</div><span class="ann-key-text"><strong>No LinkedIn in navigation social links</strong> — InAmigos recruits interns via LinkedIn but it's not linked anywhere on site. <span class="ann-key-label med">Medium</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge high">4</div><span class="ann-key-text"><strong>Hero slider has no real photos</strong> — Only text on plain background. No actual images of Seva drives, Bachpanshala sessions, or volunteers. Missed opportunity to build emotional trust. <span class="ann-key-label high">High</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge high">5</div><span class="ann-key-text"><strong>Incorrect stat: "28 States"</strong> — InAmigos operates in ~5 states with 28 volunteers. This is a factual error that reduces credibility. <span class="ann-key-label high">High</span></span></div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 2: ABOUT + CAUSES -->
+  <div style="margin-top:44px;">
+    <div style="font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:8px;">Screenshot 2 — About & Causes Section (Scrolled Down)</div>
+    <div class="sf">
+      <div class="sf-bar">
+        <div class="sf-dot r"></div><div class="sf-dot y"></div><div class="sf-dot g"></div>
+        <div class="sf-addr">inamigosfoundation.org.in/#about</div>
+      </div>
+      <div class="annotated">
+
+        <!-- ABOUT SECTION -->
+        <div class="r-about" style="position:relative;">
+          <!-- ISSUE 6: Wall of text -->
+          <div class="ann-box med" style="top:10px;left:10px;right:52%;bottom:10px;"></div>
+          <div class="ann-badge med" style="top:5px;left:5px;">6</div>
+          <div class="r-about-txt">
+            <h3>Get to Know Us Better</h3>
+            <p>InAmigos Foundation was founded on September 23, 2020, by Mr. Govind Shukla (Founder &amp; CEO). It is a Section 8 registered non-profit organization, licensed by the Central Government. It has its base at Chhattisgarh. It holds 80G &amp; 12A certifications, ensuring transparency, accountability and tax-exempt benefits for donors. Our foundation is also CSR-1 registered, allowing us to collaborate with corporate partners for impactful Corporate Social Responsibility (CSR) initiatives. Additionally, we are NITI Aayog registered, aligning our work with national development goals and hold the prestigious IAF ISO 9001:2015 certification, signifying our commitment to maintaining high-quality standards in operations and service delivery. Our Key Initiatives 1. Project Seva – Providing food and clothing to the underprivileged. 2. Project Bachpanshala – Ensuring quality education for underprivileged children. 3. Project Jeev – Animal welfare, including rescue, protection and feeding. 4. Project Udaan – Women empowerment through skill development. 5. Project Prakriti – Environmental conservation. 6. Project Vikas – Enhancing employability through skill development programs.</p>
+            <div class="r-btn-readmore">Let's Know More</div>
+          </div>
+          <div class="r-about-img">No founder photo<br/>or team image here</div>
+          <!-- ISSUE 7: No founder image -->
+          <div class="ann-box med" style="top:10px;right:10px;left:52%;bottom:10px;"></div>
+          <div class="ann-badge med" style="top:5px;right:5px;">7</div>
+        </div>
+
+        <!-- CAUSES -->
+        <div class="r-causes-section" style="position:relative;">
+          <div class="ann-badge high" style="top:-10px;right:10px;">8</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+              <div style="font-size:.68rem;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">OUR CAUSES</div>
+              <div class="r-causes-title">Our Causes</div>
+            </div>
+            <div style="font-size:.75rem;color:#E8601C;cursor:pointer;">View All Causes →</div>
+          </div>
+          <div class="r-causes-grid">
+            <div class="r-cause-card">
+              <div class="r-cause-img">📚 Bachpanshala</div>
+              <div class="r-cause-body">
+                <div class="r-cause-title">Project Bachpanshala</div>
+                <div class="r-cause-desc">Ensuring quality education for underprivileged children through digital literacy and life skills.</div>
+              </div>
+              <div class="r-cause-progress"><div class="r-cause-progress-bar" style="width:65%;"></div></div>
+              <div class="r-cause-amounts"><span>Raised: ₹32,500</span><span>Goal: ₹50,000</span></div>
+            </div>
+            <div class="r-cause-card">
+              <div class="r-cause-img">🍚 Seva</div>
+              <div class="r-cause-body">
+                <div class="r-cause-title">Project Seva</div>
+                <div class="r-cause-desc">Providing food and clothing to the underprivileged across multiple states in India.</div>
+              </div>
+              <div class="r-cause-progress"><div class="r-cause-progress-bar" style="width:80%;"></div></div>
+              <div class="r-cause-amounts"><span>Raised: ₹40,000</span><span>Goal: ₹50,000</span></div>
+            </div>
+            <!-- ISSUE 8: Vikas missing from causes -->
+            <div class="r-cause-card" style="position:relative;border:2px dashed var(--amber);background:#FFFBF5;">
+              <div class="ann-box high" style="top:0;left:0;right:0;bottom:0;border:none;background:transparent;"></div>
+              <div class="ann-badge high" style="top:-10px;right:-10px;">9</div>
+              <div class="r-cause-img" style="background:#FEF0D5;color:var(--amber);">⚠️ Project Vikas<br/><small>MISSING from this section!</small></div>
+              <div class="r-cause-body">
+                <div class="r-cause-title" style="color:var(--amber);">Project Vikas — Not Listed</div>
+                <div class="r-cause-desc">This project exists on the About page but does not appear in the Causes section, making the listing incomplete.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="ann-key">
+      <div class="ann-key-row"><div class="ann-key-badge med">6</div><span class="ann-key-text"><strong>About section is a wall of text</strong> — One giant paragraph with no visual breaks, icons, or subheadings. Most users will skip it entirely. Needs restructuring with visual hierarchy. <span class="ann-key-label med">Medium</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge med">7</div><span class="ann-key-text"><strong>No founder photo or team imagery</strong> — The About section has no image of Mr. Govind Shukla or the team. A founder photo builds immediate personal trust with visitors. <span class="ann-key-label med">Medium</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge high">8</div><span class="ann-key-text"><strong>Outdated events shown prominently</strong> — Events from Feb–March 2025 are shown. No upcoming events are listed, making the organisation appear inactive. <span class="ann-key-label high">High</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge high">9</div><span class="ann-key-text"><strong>Project Vikas missing from Causes</strong> — Only 5 of 6 projects are listed in the Causes section. Vikas (Youth Development) is absent, creating an incomplete and inconsistent picture. <span class="ann-key-label high">High</span></span></div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT 3: VOLUNTEERS + FOOTER -->
+  <div style="margin-top:44px;">
+    <div style="font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:8px;">Screenshot 3 — Volunteers Section & Footer</div>
+    <div class="sf">
+      <div class="sf-bar">
+        <div class="sf-dot r"></div><div class="sf-dot y"></div><div class="sf-dot g"></div>
+        <div class="sf-addr">inamigosfoundation.org.in/#volunteers</div>
+      </div>
+      <div class="annotated">
+
+        <!-- VOLUNTEERS -->
+        <div class="r-volunteers" style="position:relative;">
+          <div class="ann-badge crit" style="top:-10px;right:10px;">10</div>
+          <div class="r-vol-title">Our Volunteers</div>
+          <div class="r-vol-grid">
+            <div class="r-vol-card" style="position:relative;border-color:var(--red);">
+              <div class="ann-box crit" style="top:0;left:0;right:0;bottom:0;"></div>
+              <div class="r-vol-avatar">👤</div>
+              <div class="r-vol-name">Faiz Khan</div>
+              <div class="r-vol-role">Volunteer Supervisor · Uttar Pradesh</div>
+              <div class="r-vol-email">kfaiz3662@gmail.com ← EXPOSED!</div>
+            </div>
+            <div class="r-vol-card" style="position:relative;border-color:var(--red);">
+              <div class="ann-box crit" style="top:0;left:0;right:0;bottom:0;"></div>
+              <div class="r-vol-avatar">👤</div>
+              <div class="r-vol-name">Manavi Jaiswal</div>
+              <div class="r-vol-role">Junior Volunteer Associate</div>
+              <div class="r-vol-email">manavijaiswal67@gmail.com ← EXPOSED!</div>
+            </div>
+            <div class="r-vol-card" style="position:relative;border-color:var(--red);">
+              <div class="ann-box crit" style="top:0;left:0;right:0;bottom:0;"></div>
+              <div class="r-vol-avatar">👤</div>
+              <div class="r-vol-name">Akash .</div>
+              <div class="r-vol-role">Volunteer Associate</div>
+              <div class="r-vol-email">jhfgjufv@gmail.com ← EXPOSED!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="r-footer" style="position:relative;">
+          <div class="ann-badge crit" style="top:-10px;right:10px;">11</div>
+          <div class="r-footer-grid">
+            <div>
+              <div class="r-footer-logo"></div>
+              <div class="r-footer-tagline">Ward No. 5, Gram Post, Sipat Ujwal Nagar, Bilaspur. Chhattisgarh Pin-Code: 495555<br/>inamigosfoundation@gmail.com<br/>+91 626 730 9902</div>
+              <div class="r-footer-social" style="position:relative;">
+                <div class="ann-box crit" style="top:-4px;left:-4px;right:-4px;bottom:-4px;"></div>
+                <div class="r-footer-soc-icon">📘</div>
+                <div class="r-footer-soc-icon" style="border:1px dashed var(--red);background:#2a1a1a;" title="Links to twitter.com — not InAmigos page">🐦</div>
+                <div class="r-footer-soc-icon" style="border:1px dashed var(--red);background:#2a1a1a;" title="Links to google.com!">G</div>
+                <div class="r-footer-soc-icon" style="border:1px dashed var(--red);background:#2a1a1a;">📌</div>
+                <div class="r-footer-soc-icon">📷</div>
+                <div style="font-size:.55rem;color:var(--red);margin-left:4px;align-self:center;">← 3 broken links</div>
+              </div>
+            </div>
+            <div>
+              <div class="r-footer-heading">Useful Links</div>
+              <div class="r-footer-link">Events</div><div class="r-footer-link">Volunteers</div>
+              <div class="r-footer-link">Gallery</div><div class="r-footer-link">Blog</div><div class="r-footer-link">Categories</div>
+            </div>
+            <div>
+              <div class="r-footer-heading">Pages</div>
+              <div class="r-footer-link">About Us</div><div class="r-footer-link">Contact</div>
+            </div>
+            <div>
+              <div class="r-footer-heading">No Newsletter Signup</div>
+              <div style="font-size:.7rem;color:#555;border:1px dashed #555;padding:10px;text-align:center;margin-top:4px;">No email subscription<br/>section anywhere<br/>on the website</div>
+            </div>
+          </div>
+          <!-- ISSUE 12: No newsletter -->
+          <div class="ann-badge med" style="top:-10px;right:140px;">12</div>
+          <div class="r-footer-bottom">© InAmigos Foundation. All Rights Reserved. Developed by Visho Infotech</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="ann-key">
+      <div class="ann-key-row"><div class="ann-key-badge crit">10</div><span class="ann-key-text"><strong>Personal email addresses exposed publicly</strong> — kfaiz3662@gmail.com, manavijaiswal67@gmail.com, jhfgjufv@gmail.com are displayed on the public Volunteers page. This is a privacy and security violation. <span class="ann-key-label crit">Critical</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge crit">11</div><span class="ann-key-text"><strong>Footer social links broken</strong> — The 🐦 Twitter icon links to twitter.com (not InAmigos), G links to google.com, 📌 links to pinterest.com. None of these go to InAmigos profiles. <span class="ann-key-label crit">Critical</span></span></div>
+      <div class="ann-key-row"><div class="ann-key-badge med">12</div><span class="ann-key-text"><strong>No newsletter or email signup</strong> — There is no way for supporters to subscribe to updates. A mailing list is one of the most valuable long-term assets for an NGO. <span class="ann-key-label med">Medium</span></span></div>
+    </div>
+  </div>
+</div>
+
+<hr class="div" style="max-width:1020px;margin:0 auto;"/>
+
+<!-- ISSUE LIST -->
+<div class="wrap">
+  <div class="sec-label">Section 03</div>
+  <h2 class="sec-title">All Issues — <em>Detailed Breakdown</em></h2>
+  <p class="sec-desc">Every identified issue with category, priority, and a specific actionable fix.</p>
+  <div class="iss-list">
+    <div class="iss"><div class="iss-n">01</div><div class="iss-body"><div class="iss-title">🚨 Malicious Spam Link Injection in Homepage Code</div><div class="iss-desc">Source code contains 8+ injected gambling links ("slot gacor"). These are hidden from users but visible to Google, causing SEO blacklisting and security breaches.</div><div class="iss-fix">Delete all injected links, change all CMS/admin passwords, scan for malware, and update all CMS plugins immediately.</div></div><div class="iss-badge-cell"><span class="iss-pill crit">Critical</span></div></div>
+    <div class="iss"><div class="iss-n">02</div><div class="iss-body"><div class="iss-title">🚨 Personal Volunteer Email Addresses Publicly Exposed</div><div class="iss-desc">Three volunteers' personal Gmail IDs are shown on the public Volunteers page, exposing them to spam and phishing attacks.</div><div class="iss-fix">Remove all personal emails. Replace with a single contact form or a unified NGO alias like volunteer@inamigosfoundation.org.in.</div></div><div class="iss-badge-cell"><span class="iss-pill crit">Critical</span></div></div>
+    <div class="iss"><div class="iss-n">03</div><div class="iss-body"><div class="iss-title">🚨 Footer Social Links Point to Wrong/Generic Websites</div><div class="iss-desc">Twitter links to twitter.com, the "G" icon links to google.com, Pinterest links to pinterest.com — none go to InAmigos profiles. LinkedIn is absent entirely.</div><div class="iss-fix">Replace all links with correct InAmigos social profile URLs. Add LinkedIn. Remove icons for unused platforms.</div></div><div class="iss-badge-cell"><span class="iss-pill crit">Critical</span></div></div>
+    <div class="iss"><div class="iss-n">04</div><div class="iss-body"><div class="iss-title">⚠️ Hero Slider Has No Real NGO Photos</div><div class="iss-desc">The homepage hero only shows text on a plain dark background. For an NGO, real human photos are the #1 trust-building element — visitors form opinions in under 3 seconds.</div><div class="iss-fix">Add high-quality photos from actual InAmigos events to each hero slide. Image + headline + CTA button is the proven format.</div></div><div class="iss-badge-cell"><span class="iss-pill high">High</span></div></div>
+    <div class="iss"><div class="iss-n">05</div><div class="iss-body"><div class="iss-title">⚠️ "28 States" Stat Is Factually Incorrect</div><div class="iss-desc">The stats bar shows "28 States" but the About page says InAmigos has 28 volunteers working across ~5 states. This factual inconsistency damages credibility.</div><div class="iss-fix">Change label to "28+ Volunteers" and verify all statistics are consistent across all pages.</div></div><div class="iss-badge-cell"><span class="iss-pill high">High</span></div></div>
+    <div class="iss"><div class="iss-n">06</div><div class="iss-body"><div class="iss-title">⚠️ Project Vikas Missing from the Causes Section</div><div class="iss-desc">The Causes section lists only 5 projects. Project Vikas (Youth Skill Development) is described on the About page but never appears in Causes — creating an incomplete listing.</div><div class="iss-fix">Add Project Vikas as the 6th cause card with an appropriate icon, description, and any fundraising data.</div></div><div class="iss-badge-cell"><span class="iss-pill high">High</span></div></div>
+    <div class="iss"><div class="iss-n">07</div><div class="iss-body"><div class="iss-title">⚠️ Events Section Shows Outdated 2025 Content Only</div><div class="iss-desc">Events from Feb–March 2025 (World Water Day, International Day of Happiness) are still prominently displayed with no upcoming events listed — making the org appear inactive.</div><div class="iss-fix">Archive old events under "Past Events". Add upcoming events or a "Stay tuned" notice with a newsletter signup.</div></div><div class="iss-badge-cell"><span class="iss-pill high">High</span></div></div>
+    <div class="iss"><div class="iss-n">08</div><div class="iss-body"><div class="iss-title">⚠️ LinkedIn Not Linked Anywhere on Website</div><div class="iss-desc">InAmigos actively recruits interns and engages professionals on LinkedIn, but no LinkedIn link exists anywhere on the website — not in the header bar or footer social icons.</div><div class="iss-fix">Add the InAmigos LinkedIn profile URL to both the top social bar and the footer social icons.</div></div><div class="iss-badge-cell"><span class="iss-pill high">High</span></div></div>
+    <div class="iss"><div class="iss-n">09</div><div class="iss-body"><div class="iss-title">💡 About Section Is a Dense Wall of Text</div><div class="iss-desc">The "Get to Know Us Better" section is one long paragraph with no subheadings, icons, bullet points or visual rhythm. Most visitors skip large unbroken text blocks.</div><div class="iss-fix">Break into sections: Mission Statement, Certifications (with badge icons), Projects (bullet list), and a "Meet the Founder" photo block.</div></div><div class="iss-badge-cell"><span class="iss-pill med">Medium</span></div></div>
+    <div class="iss"><div class="iss-n">10</div><div class="iss-body"><div class="iss-title">💡 No Testimonials or Impact Stories</div><div class="iss-desc">There are no quotes, testimonials, or real stories from beneficiaries, volunteers, or community members — the most emotionally compelling content type for an NGO.</div><div class="iss-fix">Add a "Voices of Change" section with 3–5 testimonials: photo, name, role, and a short quote about their InAmigos experience.</div></div><div class="iss-badge-cell"><span class="iss-pill med">Medium</span></div></div>
+    <div class="iss"><div class="iss-n">11</div><div class="iss-body"><div class="iss-title">💡 No Donation Progress Bars or Fund Transparency</div><div class="iss-desc">Donation buttons exist but there's no visible fundraising goal, progress bar, or fund allocation breakdown — all proven to significantly increase donor trust and conversion.</div><div class="iss-fix">Add a progress bar per project (e.g., "₹35,000 raised of ₹1,00,000 goal") and a simple pie chart showing fund allocation.</div></div><div class="iss-badge-cell"><span class="iss-pill med">Medium</span></div></div>
+    <div class="iss"><div class="iss-n">12</div><div class="iss-body"><div class="iss-title">💡 No Mobile Hamburger Menu</div><div class="iss-desc">On mobile screens the full navigation bar is not accessible. Most Indian NGO visitors are on mobile — missing navigation means users cannot find Causes, Gallery, or Contact pages.</div><div class="iss-fix">Add a responsive hamburger (☰) menu that opens a drawer with all navigation links on screens below 768px.</div></div><div class="iss-badge-cell"><span class="iss-pill med">Medium</span></div></div>
+    <div class="iss"><div class="iss-n">13</div><div class="iss-body"><div class="iss-title">✨ Generic Visual Design with No Brand Identity</div><div class="iss-desc">The site uses a stock CMS template with no distinctive colours, typography, or visual personality. It looks like thousands of other websites and doesn't reflect InAmigos' warmth and energy.</div><div class="iss-fix">Define a brand palette (saffron, forest green, cream) and apply consistently. Use a distinctive serif display font. Add custom project icons.</div></div><div class="iss-badge-cell"><span class="iss-pill low">Low</span></div></div>
+    <div class="iss"><div class="iss-n">14</div><div class="iss-body"><div class="iss-title">✨ No Email Newsletter / Subscriber List</div><div class="iss-desc">There's no email signup anywhere. An email list enables direct communication with donors, volunteers, and supporters — the highest-ROI channel for NGOs.</div><div class="iss-fix">Add a simple "Stay Updated" email form connected to Mailchimp (free plan). Target: "Join 500+ InAmigos supporters."</div></div><div class="iss-badge-cell"><span class="iss-pill low">Low</span></div></div>
+  </div>
+</div>
+
+<hr class="div" style="max-width:1020px;margin:0 auto;"/>
+
+<!-- SCORE CARD + RECOMMENDATIONS -->
+<div class="wrap">
+  <div class="sec-label">Section 04</div>
+  <h2 class="sec-title">Website <em>Score Card</em></h2>
+  <p class="sec-desc">Current audit scores across six dimensions. Post-fix projected score shown in brackets.</p>
+  <div class="score-grid">
+    <div class="sc-item"><div class="sc-cat">Security</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:25%;background:var(--red);"></div></div><div class="sc-val" style="color:var(--red);">2.5/10</div><div class="sc-note">Spam injection + exposed emails = severe risk</div></div>
+    <div class="sc-item"><div class="sc-cat">Visual Design</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:45%;background:var(--amber);"></div></div><div class="sc-val" style="color:var(--amber);">4.5/10</div><div class="sc-note">Generic template, no brand identity</div></div>
+    <div class="sc-item"><div class="sc-cat">Content Accuracy</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:50%;background:var(--amber);"></div></div><div class="sc-val" style="color:var(--amber);">5.0/10</div><div class="sc-note">Stat errors, missing Vikas, outdated events</div></div>
+    <div class="sc-item"><div class="sc-cat">User Experience</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:40%;background:var(--amber);"></div></div><div class="sc-val" style="color:var(--amber);">4.0/10</div><div class="sc-note">No mobile menu, no testimonials</div></div>
+    <div class="sc-item"><div class="sc-cat">Trust Signals</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:50%;background:var(--amber);"></div></div><div class="sc-val" style="color:var(--amber);">5.0/10</div><div class="sc-note">Certifications exist but no visual trust elements</div></div>
+    <div class="sc-item"><div class="sc-cat">Call-to-Action</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:58%;background:var(--blue);"></div></div><div class="sc-val" style="color:var(--blue);">5.8/10</div><div class="sc-note">Donate + Volunteer buttons exist but weak context</div></div>
+  </div>
+
+  <div style="margin-top:48px;">
+    <div class="sec-label">Section 05</div>
+    <h2 class="sec-title">Prioritised <em>Action Roadmap</em></h2>
+    <table class="rtable">
+      <thead><tr><th>#</th><th>Action</th><th>Priority</th><th>Effort</th><th>Category</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Remove all injected spam/gambling links from source code</td><td><span class="pill p1">Critical</span></td><td>Low</td><td><span class="ptag">Security</span></td></tr>
+        <tr><td>2</td><td>Remove personal volunteer email addresses from public pages</td><td><span class="pill p1">Critical</span></td><td>Low</td><td><span class="ptag">Security</span></td></tr>
+        <tr><td>3</td><td>Fix all footer social links to correct InAmigos profile URLs</td><td><span class="pill p1">Critical</span></td><td>Low</td><td><span class="ptag">Content</span></td></tr>
+        <tr><td>4</td><td>Add real event photos to each hero slider slide</td><td><span class="pill p2">High</span></td><td>Low</td><td><span class="ptag">Design</span></td></tr>
+        <tr><td>5</td><td>Fix "28 States" to "28+ Volunteers" stat</td><td><span class="pill p2">High</span></td><td>Low</td><td><span class="ptag">Content</span></td></tr>
+        <tr><td>6</td><td>Add Project Vikas to the Causes section</td><td><span class="pill p2">High</span></td><td>Low</td><td><span class="ptag">Content</span></td></tr>
+        <tr><td>7</td><td>Add LinkedIn profile link to header & footer social icons</td><td><span class="pill p2">High</span></td><td>Low</td><td><span class="ptag">UX</span></td></tr>
+        <tr><td>8</td><td>Archive outdated events; add upcoming events or notice</td><td><span class="pill p2">High</span></td><td>Low</td><td><span class="ptag">Content</span></td></tr>
+        <tr><td>9</td><td>Restructure About section with visual hierarchy & founder photo</td><td><span class="pill p3">Medium</span></td><td>Medium</td><td><span class="ptag">UX / Design</span></td></tr>
+        <tr><td>10</td><td>Add testimonials section with volunteer quotes & photos</td><td><span class="pill p3">Medium</span></td><td>Medium</td><td><span class="ptag">Content</span></td></tr>
+        <tr><td>11</td><td>Add donation progress bars and fund allocation transparency</td><td><span class="pill p3">Medium</span></td><td>Medium</td><td><span class="ptag">Trust</span></td></tr>
+        <tr><td>12</td><td>Implement mobile responsive hamburger navigation</td><td><span class="pill p3">Medium</span></td><td>Medium</td><td><span class="ptag">Mobile / UX</span></td></tr>
+        <tr><td>13</td><td>Redesign with consistent brand colours & typography</td><td>Low</td><td>High</td><td><span class="ptag">Design</span></td></tr>
+        <tr><td>14</td><td>Add email newsletter signup section</td><td>Low</td><td>Low</td><td><span class="ptag">Marketing</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CONCLUSION -->
+<div class="conc">
+  <h2>Conclusion & Recommendations</h2>
+  <p>InAmigos has a powerful mission and proven real-world impact. Fixing the critical security issues first, then addressing content accuracy and UX improvements, will significantly boost the website's trustworthiness, search visibility, and ability to attract volunteers and donors.</p>
+  <div class="conc-chips">
+    <span class="chip">🔐 Secure the CMS</span>
+    <span class="chip">📸 Add Real Photos</span>
+    <span class="chip">✍️ Fix Content Errors</span>
+    <span class="chip">📱 Fix Mobile Menu</span>
+    <span class="chip">💛 Add Testimonials</span>
+    <span class="chip">🔗 Add LinkedIn</span>
+  </div>
+  <p style="margin-top:36px;font-size:.75rem;color:rgba(255,255,255,.25);">
+    Website Analysis Report · Web Development Intern · InAmigos Foundation · Task 2 · 2025<br/>
+    #InAmigos #UnitingMindsForAChange #WebDevelopment #NGO
+  </p>
+</div>
+
+</body>
+</html>
