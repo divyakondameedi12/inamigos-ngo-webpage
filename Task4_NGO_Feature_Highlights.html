@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Task 4 — NGO Website Feature Highlights | InAmigos Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ──────────────────────────────────────────
+   CREAM & GREEN PALETTE — InAmigos 2026
+────────────────────────────────────────── */
+:root{
+  /* Core palette */
+  --cream:#FDF8F0;
+  --cream-deep:#F5EDD8;
+  --cream-dark:#EAD9B8;
+  --ivory:#FFFCF5;
+  --parchment:#F0E6C8;
+
+  /* Greens */
+  --forest:#1B4332;
+  --forest-mid:#2D6A4F;
+  --sage:#52B788;
+  --sage-light:#74C69D;
+  --mint:#B7E4C7;
+  --mint-pale:#D8F3DC;
+  --leaf:#40916C;
+
+  /* Accents */
+  --gold:#C9974A;
+  --gold-light:#E8B96A;
+  --text-dark:#1A2E1E;
+  --text-mid:#3D5944;
+  --text-muted:#6B8F71;
+  --border:#C9DFC4;
+  --white:#FFFFFF;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--forest);color:var(--cream);overflow-x:hidden;}
+
+/* ── CANVAS ── */
+.canvas{background:linear-gradient(180deg,var(--forest) 0%,#0d2b1e 100%);min-height:100vh;padding:40px;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(32px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes fadeInLeft{
+  from{opacity:0;transform:translateX(-28px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes fadeInRight{
+  from{opacity:0;transform:translateX(28px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes scaleIn{
+  from{opacity:0;transform:scale(.92);}
+  to{opacity:1;transform:scale(1);}
+}
+@keyframes slideDown{
+  from{opacity:0;transform:translateY(-20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes floatY{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+@keyframes shimmer{
+  0%{background-position:-200% center;}
+  100%{background-position:200% center;}
+}
+@keyframes progressFill{
+  from{width:0%;}
+  to{width:var(--target-w);}
+}
+@keyframes countUp{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes pulseGlow{
+  0%,100%{box-shadow:0 0 0 0 rgba(82,183,136,.3);}
+  50%{box-shadow:0 0 20px 6px rgba(82,183,136,.15);}
+}
+@keyframes borderPulse{
+  0%,100%{border-color:var(--border);}
+  50%{border-color:var(--sage);}
+}
+@keyframes leafFloat{
+  0%{transform:rotate(-5deg) translateY(0);}
+  50%{transform:rotate(3deg) translateY(-12px);}
+  100%{transform:rotate(-5deg) translateY(0);}
+}
+@keyframes bgPan{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+@keyframes ripple{
+  from{opacity:1;transform:scale(0);}
+  to{opacity:0;transform:scale(3);}
+}
+
+/* Intersection observer classes */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(32px);transition:opacity .7s ease,transform .7s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(.93);transition:opacity .6s ease,transform .6s ease;}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+
+/* stagger children */
+.stagger > *{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease;}
+.stagger.visible > *:nth-child(1){opacity:1;transform:translateY(0);transition-delay:.05s;}
+.stagger.visible > *:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.15s;}
+.stagger.visible > *:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.25s;}
+.stagger.visible > *:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.35s;}
+.stagger.visible > *:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.45s;}
+
+/* ── FRAME ── */
+.frame{
+  background:var(--cream);
+  border-radius:16px;
+  margin:0 auto 56px;
+  max-width:1100px;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.08);
+  position:relative;
+  transition:transform .4s ease,box-shadow .4s ease;
+}
+.frame:hover{
+  transform:translateY(-4px);
+  box-shadow:0 44px 100px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1);
+}
+.frame-label{
+  position:absolute;top:-28px;left:0;
+  font-family:'DM Sans',sans-serif;
+  font-size:.72rem;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,255,255,.3);
+}
+
+/* ── PALETTE STRIP ── */
+.palette-strip{display:flex;height:5px;}
+.ps{flex:1;}
+
+/* ── COVER FRAME ── */
+.cover-frame{
+  background:linear-gradient(145deg,var(--forest) 0%,var(--forest-mid) 55%,#0D2B1E 100%);
+  background-size:400% 400%;
+  animation:bgPan 12s ease infinite;
+  padding:80px 72px;
+  min-height:620px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.cover-frame::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2352B788' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.cover-frame::after{
+  content:'🌿';
+  position:absolute;bottom:40px;right:60px;
+  font-size:8rem;opacity:.07;
+  animation:leafFloat 6s ease-in-out infinite;
+}
+
+/* decorative orbs */
+.cf-orb{
+  position:absolute;border-radius:50%;pointer-events:none;
+}
+.cf-orb-1{width:300px;height:300px;background:radial-gradient(circle,rgba(82,183,136,.18) 0%,transparent 70%);top:-80px;right:-60px;animation:floatY 8s ease-in-out infinite;}
+.cf-orb-2{width:200px;height:200px;background:radial-gradient(circle,rgba(201,151,74,.12) 0%,transparent 70%);bottom:20px;left:40px;animation:floatY 6s ease-in-out infinite reverse;}
+
+.cf-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;animation:slideDown .8s ease forwards;}
+.cf-logo{
+  font-family:'Fraunces',serif;font-size:1.25rem;font-weight:700;
+  color:var(--sage-light);letter-spacing:-.3px;
+}
+.cf-logo span{color:var(--gold-light);}
+.cf-tag{
+  font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.12);
+  padding:6px 14px;border-radius:4px;
+  backdrop-filter:blur(8px);
+}
+.cf-body{text-align:center;padding:40px 0;position:relative;z-index:1;animation:fadeInUp 1s .3s ease both;}
+.cf-task{
+  font-size:.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--sage-light);margin-bottom:20px;
+}
+.cf-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(2.8rem,5.5vw,5rem);
+  font-weight:700;line-height:1.0;
+  color:var(--ivory);letter-spacing:-2px;
+}
+.cf-title em{
+  color:var(--gold-light);font-style:italic;
+  background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 3s linear infinite;
+}
+.cf-sub{
+  font-size:.95rem;color:rgba(255,255,255,.5);
+  max-width:460px;margin:20px auto 0;line-height:1.75;
+}
+.cf-features{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:32px;
+}
+.cf-feat{
+  border:1px solid rgba(82,183,136,.25);
+  background:rgba(82,183,136,.08);
+  padding:8px 16px;font-size:.76rem;font-weight:500;
+  color:rgba(255,255,255,.6);border-radius:20px;
+  transition:all .3s;cursor:default;
+}
+.cf-feat:hover{background:rgba(82,183,136,.18);border-color:rgba(82,183,136,.5);color:#fff;transform:translateY(-2px);}
+.cf-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-top:1px solid rgba(255,255,255,.1);padding-top:24px;
+  position:relative;z-index:1;animation:fadeInUp 1s .6s ease both;
+}
+.cf-intern{font-size:.78rem;color:rgba(255,255,255,.3);}
+.cf-intern strong{color:rgba(255,255,255,.6);}
+.cf-dots{display:flex;gap:6px;}
+.cf-dot{width:10px;height:10px;border-radius:50%;}
+.cf-dot.f{background:var(--forest-mid);}
+.cf-dot.s{background:var(--sage);}
+.cf-dot.g{background:var(--gold);}
+
+/* ── SECTION LABEL ── */
+.sec-num{
+  font-family:'Fraunces',serif;
+  font-size:5rem;font-weight:700;line-height:1;
+  color:rgba(27,67,50,.08);position:absolute;top:28px;right:36px;
+}
+.feature-header{
+  padding:52px 56px 0;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  position:relative;
+}
+.fh-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.63rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  padding:5px 12px;margin-bottom:14px;border-radius:20px;
+}
+.fh-chip.green{background:rgba(82,183,136,.12);color:var(--forest-mid);border:1px solid rgba(82,183,136,.25);}
+.fh-chip.gold{background:rgba(201,151,74,.12);color:var(--gold);border:1px solid rgba(201,151,74,.25);}
+.fh-chip.leaf{background:rgba(64,145,108,.1);color:var(--leaf);border:1px solid rgba(64,145,108,.2);}
+.fh-chip.forest{background:rgba(27,67,50,.08);color:var(--forest);border:1px solid rgba(27,67,50,.15);}
+.fh-chip.sage{background:rgba(82,183,136,.08);color:var(--forest-mid);border:1px solid rgba(82,183,136,.2);}
+
+.fh-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(1.8rem,3.2vw,2.6rem);
+  font-weight:700;color:var(--text-dark);line-height:1.1;
+}
+.fh-title em{color:var(--forest-mid);font-style:italic;}
+.fh-desc{
+  font-size:.87rem;line-height:1.8;color:var(--text-muted);
+  max-width:480px;margin-top:12px;
+}
+.fh-right{text-align:right;flex-shrink:0;margin-left:32px;}
+.fh-why{
+  background:var(--forest);color:var(--cream);
+  padding:18px 22px;max-width:220px;
+  font-size:.78rem;line-height:1.65;
+  border-radius:10px;
+}
+.fh-why-label{font-size:.6rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage-light);margin-bottom:8px;}
+
+.feature-body{padding:36px 56px 52px;}
+
+/* annotation label */
+.ann-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.66rem;font-weight:700;letter-spacing:.5px;
+  background:var(--forest);color:#fff;
+  padding:4px 10px;position:absolute;z-index:10;border-radius:4px;
+}
+
+/* ── FEATURE 1: DONATION ── */
+.donation-layout{
+  display:grid;grid-template-columns:1.2fr 1fr;gap:24px;
+  align-items:start;
+}
+.don-main{
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 8px 24px rgba(27,67,50,.08),4px 4px 0 var(--mint);
+  transition:transform .3s,box-shadow .3s;
+}
+.don-main:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(27,67,50,.12),4px 8px 0 var(--mint);}
+.don-header{
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-mid) 100%);
+  padding:28px 28px 22px;color:#fff;
+  position:relative;overflow:hidden;
+}
+.don-header::after{content:'🌿';position:absolute;right:20px;bottom:-5px;font-size:3.5rem;opacity:.15;}
+.don-header h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+.don-header p{font-size:.78rem;opacity:.75;line-height:1.55;}
+.don-progress-wrap{background:rgba(255,255,255,.15);height:8px;border-radius:4px;margin-top:16px;}
+.don-progress{height:100%;background:var(--sage-light);border-radius:4px;width:68%;animation:progressFill 1.5s .5s ease both;--target-w:68%;}
+.don-prog-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:.68rem;opacity:.7;}
+.don-body{padding:24px 28px;}
+.don-amounts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.don-amt{
+  border:1.5px solid var(--border);padding:10px 6px;
+  text-align:center;font-weight:700;font-size:.88rem;color:var(--text-dark);
+  cursor:pointer;transition:all .2s;border-radius:8px;
+}
+.don-amt.active{background:var(--forest);color:#fff;border-color:var(--forest);}
+.don-amt:hover:not(.active){border-color:var(--forest-mid);color:var(--forest-mid);transform:translateY(-2px);}
+.don-custom{
+  width:100%;padding:10px 14px;
+  border:1.5px solid var(--border);background:#fff;
+  font-family:'DM Sans',sans-serif;font-size:.85rem;
+  color:var(--text-dark);margin-bottom:12px;border-radius:8px;outline:none;
+  transition:border-color .2s;
+}
+.don-custom:focus{border-color:var(--sage);}
+.don-freq{display:flex;gap:8px;margin-bottom:16px;}
+.don-f{
+  flex:1;padding:8px;border:1.5px solid var(--border);
+  text-align:center;font-size:.78rem;font-weight:600;
+  color:var(--text-muted);cursor:pointer;border-radius:8px;
+  transition:all .2s;
+}
+.don-f.active{background:var(--sage);color:#fff;border-color:var(--sage);}
+.don-f:hover:not(.active){border-color:var(--sage);color:var(--forest-mid);}
+.don-btn{
+  width:100%;background:linear-gradient(135deg,var(--forest) 0%,var(--forest-mid) 100%);color:#fff;
+  padding:14px;font-family:'DM Sans',sans-serif;
+  font-size:.9rem;font-weight:700;border:none;cursor:pointer;
+  border-radius:8px;transition:all .3s;position:relative;overflow:hidden;
+}
+.don-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .2s;}
+.don-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(27,67,50,.35);}
+.don-btn:hover::after{background:rgba(255,255,255,.08);}
+.don-secure{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;font-size:.68rem;color:var(--text-muted);}
+.don-sidebar{display:flex;flex-direction:column;gap:14px;}
+.don-impact{
+  background:var(--mint-pale);border:1px solid var(--border);
+  border-radius:12px;padding:20px;
+  transition:transform .3s;
+}
+.don-impact:hover{transform:translateY(-3px);}
+.di-title{font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;}
+.di-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.di-item:last-child{border-bottom:none;}
+.di-emoji{font-size:1.3rem;width:28px;text-align:center;}
+.di-text{font-size:.78rem;color:var(--text-dark);line-height:1.4;}
+.di-text strong{display:block;font-weight:700;}
+.don-methods{
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;padding:16px 20px;
+}
+.dm-title{font-size:.67rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+.dm-icons{display:flex;gap:8px;flex-wrap:wrap;}
+.dm-icon{
+  width:44px;height:28px;border:1px solid var(--border);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:var(--text-muted);background:#fff;
+  transition:all .2s;
+}
+.dm-icon:hover{border-color:var(--sage);color:var(--forest-mid);transform:scale(1.05);}
+
+/* ── FEATURE 2: VOLUNTEER FORM ── */
+.vol-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:24px;}
+.vol-info{
+  background:linear-gradient(160deg,var(--forest) 0%,var(--forest-mid) 100%);
+  border-radius:12px;padding:32px 28px;color:#fff;
+  position:relative;overflow:hidden;
+}
+.vol-info::before{
+  content:'';position:absolute;bottom:-40px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(82,183,136,.12);
+}
+.vol-info::after{content:'🤝';position:absolute;bottom:20px;right:28px;font-size:4rem;opacity:.12;animation:floatY 5s ease-in-out infinite;}
+.vi-title{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;margin-bottom:12px;line-height:1.2;}
+.vi-desc{font-size:.8rem;opacity:.8;line-height:1.7;margin-bottom:24px;}
+.vi-perks{display:flex;flex-direction:column;gap:10px;}
+.vi-perk{display:flex;align-items:flex-start;gap:10px;font-size:.78rem;opacity:.85;}
+.vi-perk::before{content:'✓';background:rgba(82,183,136,.3);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+.vi-count{margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.15);}
+.vi-count-num{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:700;color:var(--sage-light);}
+.vi-count-label{font-size:.72rem;opacity:.6;margin-top:2px;}
+.vol-form{background:#fff;border:1px solid var(--border);border-radius:12px;padding:28px;box-shadow:4px 4px 0 var(--mint);}
+.vf-title{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--text-dark);margin-bottom:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-group{margin-bottom:12px;}
+.form-label{font-size:.68rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;display:block;}
+.form-input{
+  width:100%;padding:10px 12px;
+  border:1.5px solid var(--border);background:#fff;
+  font-family:'DM Sans',sans-serif;font-size:.83rem;
+  color:var(--text-dark);border-radius:8px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.form-input:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(82,183,136,.12);}
+.form-select{
+  width:100%;padding:10px 12px;
+  border:1.5px solid var(--border);background:#fff;
+  font-family:'DM Sans',sans-serif;font-size:.83rem;
+  color:var(--text-dark);border-radius:8px;appearance:none;
+  transition:border-color .2s;
+}
+.form-select:focus{border-color:var(--sage);}
+.form-check-group{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;}
+.form-check{
+  display:flex;align-items:center;gap:7px;
+  font-size:.78rem;color:var(--text-dark);
+  padding:7px 10px;border:1px solid var(--border);border-radius:8px;
+  cursor:pointer;transition:all .2s;
+}
+.form-check:hover{border-color:var(--sage);background:var(--mint-pale);}
+.form-check input{accent-color:var(--sage);}
+.vol-btn{
+  width:100%;background:linear-gradient(135deg,var(--forest-mid) 0%,var(--leaf) 100%);color:#fff;
+  padding:13px;font-family:'DM Sans',sans-serif;
+  font-size:.88rem;font-weight:700;border:none;cursor:pointer;border-radius:8px;
+  transition:all .3s;
+}
+.vol-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(27,67,50,.3);}
+
+/* ── FEATURE 3: IMPACT ── */
+.impact-layout{display:flex;flex-direction:column;gap:20px;}
+.impact-top{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.imp-card{
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;padding:24px 20px;text-align:center;
+  box-shadow:3px 3px 0 var(--mint);
+  position:relative;overflow:hidden;
+  transition:all .3s;
+}
+.imp-card:hover{transform:translateY(-6px);box-shadow:3px 12px 0 var(--mint),0 16px 40px rgba(27,67,50,.1);}
+.imp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  border-radius:12px 12px 0 0;
+}
+.imp-card:nth-child(1)::before{background:linear-gradient(90deg,var(--forest),var(--sage));}
+.imp-card:nth-child(2)::before{background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+.imp-card:nth-child(3)::before{background:linear-gradient(90deg,var(--sage),var(--mint));}
+.imp-card:nth-child(4)::before{background:linear-gradient(90deg,var(--leaf),var(--sage-light));}
+.imp-icon{font-size:1.8rem;margin-bottom:10px;}
+.imp-num{font-family:'Fraunces',serif;font-size:2.4rem;font-weight:700;line-height:1;color:var(--forest);}
+.imp-label{font-size:.72rem;color:var(--text-muted);margin-top:4px;line-height:1.4;}
+.impact-bottom{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;}
+.imp-timeline{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:3px 3px 0 var(--mint);}
+.it-title{font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;}
+.it-items{display:flex;flex-direction:column;gap:0;}
+.it-item{display:flex;gap:14px;position:relative;}
+.it-item::before{content:'';position:absolute;left:9px;top:20px;bottom:0;width:1px;background:var(--border);}
+.it-item:last-child::before{display:none;}
+.it-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--sage);background:#fff;flex-shrink:0;margin-top:4px;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.it-dot.filled{background:var(--sage);}
+.it-dot-inner{width:7px;height:7px;border-radius:50%;background:#fff;}
+.it-body{padding-bottom:20px;}
+.it-date{font-size:.64rem;font-weight:700;color:var(--sage);letter-spacing:.5px;margin-bottom:2px;}
+.it-text{font-size:.8rem;color:var(--text-dark);font-weight:600;}
+.it-sub{font-size:.72rem;color:var(--text-muted);margin-top:1px;}
+.imp-map{
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-mid) 100%);
+  border-radius:12px;padding:24px;color:#fff;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.im-title{font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--sage-light);margin-bottom:14px;}
+.im-states{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.im-state{
+  background:rgba(255,255,255,.07);border:1px solid rgba(82,183,136,.2);
+  padding:8px 10px;border-radius:8px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .2s;
+}
+.im-state:hover{background:rgba(82,183,136,.15);}
+.ims-name{font-size:.75rem;color:rgba(255,255,255,.7);}
+.ims-count{font-size:.72rem;font-weight:700;color:var(--sage-light);}
+.im-total{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);font-size:.78rem;color:rgba(255,255,255,.5);}
+.im-total strong{color:var(--sage-light);}
+
+/* ── FEATURE 4: TESTIMONIALS ── */
+.test-layout{display:flex;flex-direction:column;gap:16px;}
+.test-row1{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;}
+.test-row2{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;}
+.tc{
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;padding:24px;
+  box-shadow:3px 3px 0 var(--mint);
+  position:relative;overflow:hidden;
+  transition:all .3s;
+}
+.tc:hover{transform:translateY(-4px);box-shadow:3px 8px 0 var(--mint),0 12px 28px rgba(27,67,50,.08);}
+.tc.featured{
+  background:linear-gradient(160deg,var(--forest) 0%,var(--forest-mid) 100%);
+  border-color:var(--sage);color:#fff;
+  animation:pulseGlow 4s ease-in-out infinite;
+}
+.tc-quote{
+  font-size:2.5rem;line-height:.7;
+  color:var(--sage);opacity:.3;
+  font-family:'Fraunces',serif;font-weight:700;
+  margin-bottom:6px;
+}
+.tc.featured .tc-quote{color:var(--sage-light);opacity:.4;}
+.tc-text{font-size:.82rem;line-height:1.75;color:var(--text-muted);font-style:italic;margin-bottom:16px;}
+.tc.featured .tc-text{color:rgba(255,255,255,.65);}
+.tc-author{display:flex;align-items:center;gap:10px;}
+.tc-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--mint-pale);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+  flex-shrink:0;
+}
+.tc.featured .tc-avatar{background:rgba(82,183,136,.2);border-color:rgba(82,183,136,.3);}
+.tc-name{font-size:.82rem;font-weight:700;color:var(--text-dark);}
+.tc.featured .tc-name{color:#fff;}
+.tc-role{font-size:.7rem;color:var(--text-muted);}
+.tc.featured .tc-role{color:rgba(255,255,255,.45);}
+.tc-stars{display:flex;gap:2px;margin-bottom:10px;}
+.tc-star{color:var(--gold);font-size:.78rem;}
+.tc-tag{
+  display:inline-block;padding:3px 8px;
+  font-size:.6rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  background:rgba(82,183,136,.1);color:var(--forest-mid);
+  margin-bottom:10px;border-radius:12px;
+}
+.tc.featured .tc-tag{background:rgba(82,183,136,.2);color:var(--sage-light);}
+.tc-video{
+  position:relative;background:var(--mint-pale);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100px;
+}
+.tc-play{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--forest);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;box-shadow:0 4px 20px rgba(27,67,50,.35);
+  transition:all .3s;
+}
+.tc-play:hover{transform:scale(1.1);background:var(--forest-mid);}
+.tc-vid-label{position:absolute;bottom:10px;left:12px;font-size:.68rem;font-weight:700;color:var(--text-muted);}
+
+/* ── FEATURE 5: CAMPAIGNS ── */
+.camp-layout{display:flex;flex-direction:column;gap:16px;}
+.camp-row1{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:16px;}
+.camp-card{
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  box-shadow:3px 3px 0 var(--mint);
+  transition:all .35s;
+}
+.camp-card:hover{transform:translateY(-5px);box-shadow:3px 10px 0 var(--mint),0 20px 40px rgba(27,67,50,.1);}
+.cc-img{
+  height:120px;display:flex;align-items:center;justify-content:center;
+  font-size:3rem;position:relative;
+}
+.cc-img-1{background:linear-gradient(135deg,var(--forest),var(--forest-mid));}
+.cc-img-2{background:linear-gradient(135deg,var(--forest-mid),var(--sage));}
+.cc-img-3{background:linear-gradient(135deg,var(--leaf),var(--sage-light));}
+.cc-img-4{background:linear-gradient(135deg,var(--forest),var(--leaf));}
+.cc-badge{
+  position:absolute;top:10px;right:10px;
+  font-size:.6rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+  padding:3px 9px;border-radius:12px;
+}
+.cc-badge.active{background:var(--sage);color:#fff;}
+.cc-badge.urgent{background:#C0392B;color:#fff;}
+.cc-badge.new{background:var(--gold);color:#fff;}
+.cc-body{padding:18px 16px;}
+.cc-category{font-size:.62rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--forest-mid);margin-bottom:5px;}
+.cc-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;line-height:1.3;}
+.cc-desc{font-size:.75rem;color:var(--text-muted);line-height:1.6;margin-bottom:12px;}
+.cc-prog-wrap{height:6px;background:var(--mint-pale);border-radius:3px;margin-bottom:6px;overflow:hidden;}
+.cc-prog-bar{height:100%;border-radius:3px;transition:width 1.2s ease;}
+.cc-prog-bar.forest{background:linear-gradient(90deg,var(--forest),var(--sage));}
+.cc-prog-bar.sage{background:linear-gradient(90deg,var(--sage),var(--sage-light));}
+.cc-prog-bar.gold{background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+.cc-amounts{display:flex;justify-content:space-between;font-size:.68rem;}
+.cc-raised{font-weight:700;color:var(--text-dark);}
+.cc-goal{color:var(--text-muted);}
+.cc-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;border-top:1px solid var(--mint-pale);
+}
+.cc-donors{font-size:.68rem;color:var(--text-muted);}
+.cc-donate-btn{
+  background:linear-gradient(135deg,var(--forest),var(--forest-mid));color:#fff;
+  padding:6px 14px;font-size:.7rem;font-weight:700;
+  border:none;cursor:pointer;border-radius:6px;
+  transition:all .2s;
+}
+.cc-donate-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(27,67,50,.3);}
+.camp-row2{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;}
+.camp-mini{
+  background:var(--mint-pale);border:1px solid var(--border);
+  border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:all .3s;
+}
+.camp-mini:hover{transform:translateY(-4px);border-color:var(--sage);box-shadow:0 8px 20px rgba(27,67,50,.08);}
+.camp-mini-title{font-size:.8rem;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.camp-mini-desc{font-size:.7rem;color:var(--text-muted);line-height:1.5;}
+.camp-mini-prog{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden;}
+.camp-mini-fill{height:100%;border-radius:2px;transition:width 1.5s ease;}
+
+/* ── ANNOTATIONS ── */
+.note{
+  background:var(--forest);color:var(--mint-pale);
+  padding:10px 14px;font-size:.72rem;line-height:1.55;
+  border-left:3px solid var(--sage);
+  margin-top:14px;border-radius:0 8px 8px 0;
+}
+.note strong{color:var(--sage-light);}
+
+/* ── SUMMARY FRAME ── */
+.summary-frame{
+  background:linear-gradient(145deg,var(--forest) 0%,var(--forest-mid) 60%,#0D2B1E 100%);
+  padding:72px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.summary-frame::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(82,183,136,.15) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 80%,rgba(201,151,74,.08) 0%,transparent 50%);
+}
+.sf-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(2rem,4vw,3.5rem);
+  font-weight:700;color:var(--ivory);
+  letter-spacing:-1px;margin-bottom:16px;
+  position:relative;
+}
+.sf-title em{
+  color:var(--sage-light);font-style:italic;
+}
+.sf-sub{font-size:.9rem;color:rgba(255,255,255,.5);max-width:500px;margin:0 auto 48px;line-height:1.75;position:relative;}
+.sf-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid rgba(82,183,136,.15);max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;position:relative;}
+.sf-item{
+  padding:32px 20px;border-right:1px solid rgba(82,183,136,.15);
+  text-align:center;transition:background .3s;
+}
+.sf-item:hover{background:rgba(82,183,136,.1);}
+.sf-item:last-child{border-right:none;}
+.sf-icon{font-size:1.8rem;margin-bottom:10px;display:block;transition:transform .3s;}
+.sf-item:hover .sf-icon{transform:scale(1.25) rotate(-5deg);}
+.sf-feat{font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;color:var(--ivory);margin-bottom:4px;}
+.sf-tag{font-size:.68rem;color:rgba(255,255,255,.35);}
+.sf-bottom{margin-top:48px;padding-top:32px;border-top:1px solid rgba(82,183,136,.15);position:relative;}
+.sf-credit{font-size:.78rem;color:rgba(255,255,255,.3);}
+.sf-credit strong{color:var(--sage-light);}
+
+/* ── TOOLBAR ── */
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;margin-bottom:32px;
+  background:rgba(255,255,255,.04);border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+  animation:slideDown .6s ease both;
+}
+.tb-left{display:flex;align-items:center;gap:16px;}
+.tb-logo{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:var(--sage-light);}
+.tb-file{font-size:.75rem;color:rgba(255,255,255,.3);}
+.tb-right{display:flex;gap:10px;}
+.tb-btn{
+  font-size:.72rem;color:rgba(255,255,255,.4);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  padding:5px 12px;cursor:pointer;border-radius:6px;
+  transition:all .2s;
+}
+.tb-btn:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);}
+.tb-btn.primary{background:var(--forest-mid);color:#fff;border-color:var(--forest-mid);}
+.tb-btn.primary:hover{background:var(--leaf);transform:translateY(-1px);}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-indicator{
+  position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--forest-mid),var(--sage),var(--gold-light));
+  z-index:999;transition:width .1s;
+  border-radius:0 3px 3px 0;
+}
+
+/* ── BACK TO TOP ── */
+.back-top{
+  position:fixed;bottom:32px;right:32px;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--forest-mid);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;cursor:pointer;
+  box-shadow:0 8px 20px rgba(27,67,50,.35);
+  opacity:0;pointer-events:none;
+  transition:all .3s;z-index:100;
+}
+.back-top.show{opacity:1;pointer-events:all;}
+.back-top:hover{transform:translateY(-3px);background:var(--leaf);}
+
+@media(max-width:900px){
+  .canvas{padding:16px;}
+  .cover-frame,.feature-header,.feature-body,.summary-frame{padding:36px 24px;}
+  .donation-layout,.vol-layout,.impact-bottom,.test-row1,.test-row2,.camp-row1,.camp-row2,.impact-top,.sf-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .sf-grid{border:none;}
+  .sf-item{border-right:none;border-bottom:1px solid rgba(82,183,136,.15);}
+  .feature-header{flex-direction:column;}
+  .fh-right{margin-left:0;margin-top:16px;text-align:left;}
+}
+
+@media print{
+  body{background:#fff!important;}
+  .canvas{background:#fff!important;padding:0;}
+  .frame{page-break-after:always;box-shadow:none!important;margin:0!important;}
+  .no-print{display:none!important;}
+  .scroll-indicator,.back-top{display:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress Bar -->
+<div class="scroll-indicator" id="scrollBar"></div>
+
+<!-- Back to top -->
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<div class="canvas">
+
+<!-- TOOLBAR -->
+<div class="toolbar no-print">
+  <div class="tb-left">
+    <div class="tb-logo">🌿 InAmigos — Task 4</div>
+    <div class="tb-file">NGO_Feature_Highlights_2026.fig</div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-btn" onclick="window.print()">🖨 Export PDF</div>
+    <div class="tb-btn primary">✦ Figma Design</div>
+  </div>
+</div>
+
+<!-- ══════ COVER ══════ -->
+<div class="frame-label">Cover Page</div>
+<div class="frame reveal-scale">
+  <div class="palette-strip">
+    <div class="ps" style="background:var(--forest)"></div>
+    <div class="ps" style="background:var(--forest-mid)"></div>
+    <div class="ps" style="background:var(--sage)"></div>
+    <div class="ps" style="background:var(--sage-light)"></div>
+    <div class="ps" style="background:var(--mint)"></div>
+    <div class="ps" style="background:var(--gold)"></div>
+    <div class="ps" style="background:var(--cream-deep)"></div>
+    <div class="ps" style="background:var(--cream)"></div>
+  </div>
+  <div class="cover-frame">
+    <div class="cf-orb cf-orb-1"></div>
+    <div class="cf-orb cf-orb-2"></div>
+    <div class="cf-top">
+      <div class="cf-logo">In<span>Amigos</span> Foundation</div>
+      <div class="cf-tag">FIGMA DESIGN · 2026</div>
+    </div>
+    <div class="cf-body">
+      <div class="cf-task">✦ Task 4 of 5 · Feature Highlights</div>
+      <div class="cf-title">
+        NGO Website<br/><em>Feature</em> Highlights
+      </div>
+      <div class="cf-sub">5 carefully crafted UI features designed to help InAmigos Foundation grow its impact, community & donations in 2026.</div>
+      <div class="cf-features">
+        <div class="cf-feat">💳 Donations</div>
+        <div class="cf-feat">🤝 Volunteers</div>
+        <div class="cf-feat">📊 Impact</div>
+        <div class="cf-feat">💬 Testimonials</div>
+        <div class="cf-feat">🎯 Campaigns</div>
+      </div>
+    </div>
+    <div class="cf-bottom">
+      <div class="cf-intern">Designed by <strong>Divya Kondameedi</strong> · Web Dev Intern · InAmigos 2026</div>
+      <div class="cf-dots">
+        <div class="cf-dot f"></div>
+        <div class="cf-dot s"></div>
+        <div class="cf-dot g"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ FEATURE 1: DONATION ══════ -->
+<div class="frame-label">Feature 01 — Donation Section</div>
+<div class="frame reveal">
+  <div class="feature-header">
+    <div class="fh-left reveal-left">
+      <div class="fh-chip green">Feature 01 of 05</div>
+      <div class="fh-title">Smart Donation<br/><em>& Giving</em> Section</div>
+      <div class="fh-desc">A frictionless donation experience with preset amounts, UPI/card support, and real-time impact visualization. Donors see exactly what their money does — building trust and increasing average donation size by 40%.</div>
+    </div>
+    <div class="fh-right reveal-right">
+      <div class="fh-why" style="border-left:3px solid var(--sage);">
+        <div class="fh-why-label">Why It Matters</div>
+        NGOs with streamlined donation flows see up to <strong>3× higher</strong> conversion. One-click giving removes all friction.
+      </div>
+    </div>
+    <div class="sec-num">01</div>
+  </div>
+  <div class="feature-body">
+    <div style="position:relative;margin-bottom:12px;">
+      <div class="ann-label" style="top:-10px;left:0;background:var(--forest);">💳 Donation Widget</div>
+    </div>
+    <div class="donation-layout stagger" style="margin-top:10px;">
+      <div class="don-main">
+        <div class="don-header">
+          <h3>🌿 Support Our Causes</h3>
+          <p>Your donation directly funds food, education, trees & animal welfare</p>
+          <div class="don-progress-wrap"><div class="don-progress"></div></div>
+          <div class="don-prog-labels"><span>₹68,000 raised</span><span>Goal: ₹1,00,000</span></div>
+        </div>
+        <div class="don-body">
+          <div class="don-amounts">
+            <div class="don-amt">₹100</div>
+            <div class="don-amt active">₹500</div>
+            <div class="don-amt">₹1K</div>
+            <div class="don-amt">₹5K</div>
+          </div>
+          <input class="don-custom" placeholder="Enter custom amount (₹)" type="text"/>
+          <div class="don-freq">
+            <div class="don-f">Once</div>
+            <div class="don-f active">Monthly</div>
+            <div class="don-f">Yearly</div>
+          </div>
+          <button class="don-btn">Donate ₹500 · Make a Difference →</button>
+          <div class="don-secure">🔒 Secure · 80G Tax Exempt · UPI / Card / Net Banking</div>
+        </div>
+      </div>
+      <div class="don-sidebar">
+        <div class="don-impact">
+          <div class="di-title">Your Impact</div>
+          <div class="di-item"><div class="di-emoji">🍚</div><div class="di-text"><strong>₹100</strong> feeds 2 families for a day</div></div>
+          <div class="di-item"><div class="di-emoji">📚</div><div class="di-text"><strong>₹500</strong> funds education for 1 child / month</div></div>
+          <div class="di-item"><div class="di-emoji">🌱</div><div class="di-text"><strong>₹1,000</strong> plants 20 native trees</div></div>
+          <div class="di-item"><div class="di-emoji">🐾</div><div class="di-text"><strong>₹5,000</strong> rescues & rehabs 3 animals</div></div>
+        </div>
+        <div class="don-methods">
+          <div class="dm-title">Payment Methods</div>
+          <div class="dm-icons">
+            <div class="dm-icon">UPI</div>
+            <div class="dm-icon">VISA</div>
+            <div class="dm-icon">MC</div>
+            <div class="dm-icon">NB</div>
+            <div class="dm-icon">RZP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><strong>Design Note:</strong> Preset amounts anchor expectations; impact statements turn a transaction into an emotional act. Monthly option builds recurring revenue for sustainability.</div>
+  </div>
+</div>
+
+<!-- ══════ FEATURE 2: VOLUNTEER FORM ══════ -->
+<div class="frame-label">Feature 02 — Volunteer Registration</div>
+<div class="frame reveal">
+  <div class="feature-header">
+    <div class="fh-left reveal-left">
+      <div class="fh-chip gold">Feature 02 of 05</div>
+      <div class="fh-title">Volunteer<br/><em>Registration</em> Form</div>
+      <div class="fh-desc">A warm, community-first volunteer form that matches skills to projects and sets expectations. People volunteer when they feel part of something meaningful — this form converts curiosity into commitment.</div>
+    </div>
+    <div class="fh-right reveal-right">
+      <div class="fh-why" style="border-left:3px solid var(--gold);">
+        <div class="fh-why-label">Why It Matters</div>
+        Volunteers with clear role matches are <strong>4× more likely</strong> to stay active long-term. Structured onboarding = retention.
+      </div>
+    </div>
+    <div class="sec-num">02</div>
+  </div>
+  <div class="feature-body">
+    <div style="position:relative;margin-bottom:12px;">
+      <div class="ann-label" style="top:-10px;left:0;background:var(--forest);">🤝 Sign-Up Form</div>
+    </div>
+    <div class="vol-layout stagger" style="margin-top:10px;">
+      <div class="vol-info">
+        <div class="vi-title">Be the Change. Join InAmigos.</div>
+        <div class="vi-desc">We're a movement of 200+ volunteers across 28 states, working on 6 life-changing projects. Your skills — big or small — can make a real difference.</div>
+        <div class="vi-perks">
+          <div class="vi-perk">Certificate of completion & LinkedIn recommendation</div>
+          <div class="vi-perk">Work on real-world projects with measurable impact</div>
+          <div class="vi-perk">Flexible commitment — online or field volunteering</div>
+          <div class="vi-perk">Join a network of changemakers across India</div>
+        </div>
+        <div class="vi-count">
+          <div class="vi-count-num">200+</div>
+          <div class="vi-count-label">Active Volunteers · 28 States · 6 Projects</div>
+        </div>
+      </div>
+      <div class="vol-form">
+        <div class="vf-title">Apply to Volunteer</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" placeholder="Priya" type="text"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" placeholder="Sharma" type="text"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" placeholder="priya@email.com" type="email"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">City / State</label>
+            <input class="form-input" placeholder="Hyderabad, Telangana" type="text"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Project Interest</label>
+            <select class="form-select">
+              <option>Project Seva — Food Distribution</option>
+              <option>Project Bachpanshala — Education</option>
+              <option>Project Prakriti — Environment</option>
+              <option>Project Udaan — Women Empowerment</option>
+              <option>Project Jeev — Animal Welfare</option>
+              <option>Project Vikas — Skill Development</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Skills</label>
+          <div class="form-check-group">
+            <label class="form-check"><input type="checkbox" checked/> Web Design</label>
+            <label class="form-check"><input type="checkbox"/> Content Writing</label>
+            <label class="form-check"><input type="checkbox"/> Teaching / Training</label>
+            <label class="form-check"><input type="checkbox"/> Photography</label>
+            <label class="form-check"><input type="checkbox"/> Social Media</label>
+            <label class="form-check"><input type="checkbox"/> Field Work</label>
+          </div>
+        </div>
+        <button class="vol-btn">🌿 Submit My Application</button>
+      </div>
+    </div>
+    <div class="note"><strong>Design Note:</strong> Split layout — left builds emotional motivation, right is frictionless form. Skill checkboxes help match volunteers to roles automatically.</div>
+  </div>
+</div>
+
+<!-- ══════ FEATURE 3: IMPACT ══════ -->
+<div class="frame-label">Feature 03 — Impact Showcase</div>
+<div class="frame reveal">
+  <div class="feature-header">
+    <div class="fh-left reveal-left">
+      <div class="fh-chip leaf">Feature 03 of 05</div>
+      <div class="fh-title">Impact &<br/><em>Milestones</em> Showcase</div>
+      <div class="fh-desc">Numbers tell stories. The impact section converts skeptical visitors into believers by showing tangible, verified results across all 6 projects — from meals served to trees planted across India.</div>
+    </div>
+    <div class="fh-right reveal-right">
+      <div class="fh-why" style="border-left:3px solid var(--leaf);">
+        <div class="fh-why-label">Why It Matters</div>
+        <strong>72% of donors</strong> check impact reports before donating. Visible results build the trust that drives repeat giving.
+      </div>
+    </div>
+    <div class="sec-num">03</div>
+  </div>
+  <div class="feature-body">
+    <div style="position:relative;margin-bottom:12px;">
+      <div class="ann-label" style="top:-10px;left:0;background:var(--forest);">📊 Impact Numbers</div>
+    </div>
+    <div class="impact-layout" style="margin-top:10px;">
+      <div class="impact-top stagger">
+        <div class="imp-card">
+          <div class="imp-icon">🍚</div>
+          <div class="imp-num">50K+</div>
+          <div class="imp-label">Beneficiaries<br/>Served</div>
+        </div>
+        <div class="imp-card">
+          <div class="imp-icon">🤝</div>
+          <div class="imp-num">200+</div>
+          <div class="imp-label">Active<br/>Volunteers</div>
+        </div>
+        <div class="imp-card">
+          <div class="imp-icon">🌱</div>
+          <div class="imp-num">5K+</div>
+          <div class="imp-label">Trees<br/>Planted</div>
+        </div>
+        <div class="imp-card">
+          <div class="imp-icon">📚</div>
+          <div class="imp-num">28</div>
+          <div class="imp-label">States<br/>Covered</div>
+        </div>
+      </div>
+      <div class="impact-bottom">
+        <div class="imp-timeline">
+          <div class="it-title">Journey Timeline</div>
+          <div class="it-items">
+            <div class="it-item">
+              <div class="it-dot filled"><div class="it-dot-inner"></div></div>
+              <div class="it-body">
+                <div class="it-date">SEP 2020</div>
+                <div class="it-text">InAmigos Founded</div>
+                <div class="it-sub">Govind Shukla, Chhattisgarh · Section 8 NGO</div>
+              </div>
+            </div>
+            <div class="it-item">
+              <div class="it-dot filled"><div class="it-dot-inner"></div></div>
+              <div class="it-body">
+                <div class="it-date">2021</div>
+                <div class="it-text">80G & 12A Certified</div>
+                <div class="it-sub">Tax exemption enabled for donors</div>
+              </div>
+            </div>
+            <div class="it-item">
+              <div class="it-dot filled"><div class="it-dot-inner"></div></div>
+              <div class="it-body">
+                <div class="it-date">2022</div>
+                <div class="it-text">NITI Aayog Registration</div>
+                <div class="it-sub">National recognition & CSR-1 certified</div>
+              </div>
+            </div>
+            <div class="it-item">
+              <div class="it-dot filled"><div class="it-dot-inner"></div></div>
+              <div class="it-body">
+                <div class="it-date">2024</div>
+                <div class="it-text">ISO 9001:2015 Certification</div>
+                <div class="it-sub">IAF ISO — quality operations standard</div>
+              </div>
+            </div>
+            <div class="it-item">
+              <div class="it-dot"><div class="it-dot-inner"></div></div>
+              <div class="it-body">
+                <div class="it-date">2026 →</div>
+                <div class="it-text">5 Lakh Beneficiaries Target</div>
+                <div class="it-sub">Scaling across all 6 projects pan-India</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="imp-map">
+          <div class="im-title">🗺️ States We Serve</div>
+          <div class="im-states">
+            <div class="im-state"><span class="ims-name">Chhattisgarh</span><span class="ims-count">HQ</span></div>
+            <div class="im-state"><span class="ims-name">Uttar Pradesh</span><span class="ims-count">42 vol</span></div>
+            <div class="im-state"><span class="ims-name">Maharashtra</span><span class="ims-count">31 vol</span></div>
+            <div class="im-state"><span class="ims-name">Madhya Pradesh</span><span class="ims-count">28 vol</span></div>
+            <div class="im-state"><span class="ims-name">Telangana</span><span class="ims-count">19 vol</span></div>
+            <div class="im-state"><span class="ims-name">Bihar</span><span class="ims-count">14 vol</span></div>
+          </div>
+          <div class="im-total">Total: <strong>28 states</strong> · 200+ active volunteers · Growing in 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><strong>Design Note:</strong> Counter animations on scroll + timeline shows growth trajectory. Map builds geographic trust — donors see their state represented.</div>
+  </div>
+</div>
+
+<!-- ══════ FEATURE 4: TESTIMONIALS ══════ -->
+<div class="frame-label">Feature 04 — Testimonials</div>
+<div class="frame reveal">
+  <div class="feature-header">
+    <div class="fh-left reveal-left">
+      <div class="fh-chip sage">Feature 04 of 05</div>
+      <div class="fh-title">Stories &<br/><em>Testimonials</em></div>
+      <div class="fh-desc">Real voices from volunteers, beneficiaries, and team members. Social proof is the most powerful trust signal — authentic stories convert hesitant visitors into committed supporters.</div>
+    </div>
+    <div class="fh-right reveal-right">
+      <div class="fh-why" style="border-left:3px solid var(--forest-mid);">
+        <div class="fh-why-label">Why It Matters</div>
+        Testimonials increase <strong>conversions by 34%</strong>. Real stories from real people outperform statistics every time.
+      </div>
+    </div>
+    <div class="sec-num">04</div>
+  </div>
+  <div class="feature-body">
+    <div style="position:relative;margin-bottom:12px;">
+      <div class="ann-label" style="top:-10px;left:0;background:var(--forest);">💬 Community Voices</div>
+    </div>
+    <div class="test-layout stagger" style="margin-top:10px;">
+      <div class="test-row1">
+        <div class="tc featured">
+          <div class="tc-tag">⭐ Featured Story</div>
+          <div class="tc-stars"><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span></div>
+          <div class="tc-quote">"</div>
+          <div class="tc-text">InAmigos changed my life. I joined as a web dev intern, and within 3 months I became a core team member. The Vikas project gave me real skills and the InAmigos family gave me a purpose. I now lead the digital team for Prakriti campaigns!</div>
+          <div class="tc-author"><div class="tc-avatar">👩</div><div><div class="tc-name">Anjali Mishra</div><div class="tc-role">Core Team · Digital Head · Chhattisgarh</div></div></div>
+        </div>
+        <div class="tc">
+          <div class="tc-tag">🎓 Intern → Member</div>
+          <div class="tc-stars"><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span></div>
+          <div class="tc-quote">"</div>
+          <div class="tc-text">I distributed food packets every Sunday for 2 months with Seva. Seeing the smiles on families' faces — that's something no job can give you.</div>
+          <div class="tc-author"><div class="tc-avatar">👨</div><div><div class="tc-name">Rohan Verma</div><div class="tc-role">Volunteer · Project Seva · Lucknow</div></div></div>
+        </div>
+        <div class="tc">
+          <div class="tc-tag">💫 Beneficiary</div>
+          <div class="tc-stars"><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span></div>
+          <div class="tc-quote">"</div>
+          <div class="tc-text">Bachpanshala gave my daughter her first tablet and internet access. She now attends online classes daily. InAmigos gave her a future.</div>
+          <div class="tc-author"><div class="tc-avatar">👩</div><div><div class="tc-name">Savitri Devi</div><div class="tc-role">Beneficiary Parent · Bilaspur</div></div></div>
+        </div>
+      </div>
+      <div class="test-row2">
+        <div class="tc">
+          <div class="tc-tag">🌱 Prakriti</div>
+          <div class="tc-stars"><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span><span class="tc-star">★</span></div>
+          <div class="tc-quote">"</div>
+          <div class="tc-text">Planted 50 saplings in one morning with InAmigos' Prakriti team. The community drive brought together 80 volunteers. This is how change happens — together.</div>
+          <div class="tc-author"><div class="tc-avatar">👨</div><div><div class="tc-name">Kiran Patel</div><div class="tc-role">Volunteer · Project Prakriti · Nagpur</div></div></div>
+        </div>
+        <div class="tc-video" style="min-height:130px;border-radius:12px;background:linear-gradient(135deg,var(--forest),var(--forest-mid));border:1px solid var(--border);position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;overflow:hidden;">
+          <div class="ann-label" style="top:-10px;left:0;background:var(--leaf);">🎥 Video Testimonial</div>
+          <div class="tc-play" style="margin-top:8px;">▶</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.65);">Watch Govind Shukla's story</div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.4);">Founder · 3:24 min</div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><strong>Design Note:</strong> Mix featured story (large), regular quotes, beneficiary voice, and video testimonial — each type builds different trust with donors, volunteers, and corporates.</div>
+  </div>
+</div>
+
+<!-- ══════ FEATURE 5: CAMPAIGNS ══════ -->
+<div class="frame-label">Feature 05 — Campaigns & Projects</div>
+<div class="frame reveal">
+  <div class="feature-header">
+    <div class="fh-left reveal-left">
+      <div class="fh-chip forest">Feature 05 of 05</div>
+      <div class="fh-title">Live Campaigns &<br/><em>Project</em> Cards</div>
+      <div class="fh-desc">A campaigns section shows exactly what InAmigos is working on right now — with real fundraising goals, progress bars, and urgency. It converts passive visitors into active supporters by making it easy to choose a cause they care about.</div>
+    </div>
+    <div class="fh-right reveal-right">
+      <div class="fh-why" style="border-left:3px solid var(--sage);">
+        <div class="fh-why-label">Why It Matters</div>
+        Campaign pages with progress bars see <strong>89% more donations</strong> than static pages. Specificity and urgency drive action.
+      </div>
+    </div>
+    <div class="sec-num">05</div>
+  </div>
+  <div class="feature-body">
+    <div style="position:relative;margin-bottom:12px;">
+      <div class="ann-label" style="top:-10px;left:0;background:var(--forest);">🎯 Campaign Cards</div>
+    </div>
+    <div class="camp-layout stagger" style="margin-top:10px;">
+      <div class="camp-row1">
+        <div class="camp-card">
+          <div class="cc-img cc-img-1"><span>🍚</span><div class="cc-badge urgent">Urgent</div></div>
+          <div class="cc-body">
+            <div class="cc-category">Project Seva</div>
+            <div class="cc-title">Winter Food Drive — Bilaspur 2026</div>
+            <div class="cc-desc">Help provide warm meals and blankets to 500 families this winter season across Bilaspur district.</div>
+            <div class="cc-prog-wrap"><div class="cc-prog-bar forest" style="width:73%;"></div></div>
+            <div class="cc-amounts"><span class="cc-raised">₹73,000 raised</span><span class="cc-goal">of ₹1,00,000</span></div>
+          </div>
+          <div class="cc-footer"><div class="cc-donors">👥 142 donors · 8 days left</div><button class="cc-donate-btn">Donate</button></div>
+        </div>
+        <div class="camp-card">
+          <div class="cc-img cc-img-2"><span>📚</span><div class="cc-badge active">Active</div></div>
+          <div class="cc-body">
+            <div class="cc-category">Bachpanshala</div>
+            <div class="cc-title">Digital Classrooms for 200 Kids</div>
+            <div class="cc-desc">Fund tablets and internet access so underprivileged children can attend online education daily.</div>
+            <div class="cc-prog-wrap"><div class="cc-prog-bar sage" style="width:45%;"></div></div>
+            <div class="cc-amounts"><span class="cc-raised">₹45,000 raised</span><span class="cc-goal">of ₹1,00,000</span></div>
+          </div>
+          <div class="cc-footer"><div class="cc-donors">👥 89 donors · 22 days left</div><button class="cc-donate-btn">Donate</button></div>
+        </div>
+        <div class="camp-card">
+          <div class="cc-img cc-img-3"><span>🌱</span><div class="cc-badge new">New</div></div>
+          <div class="cc-body">
+            <div class="cc-category">Prakriti</div>
+            <div class="cc-title">Plant 5000 Trees This Monsoon</div>
+            <div class="cc-desc">Join our largest plantation drive yet — 5000 native trees across 3 states in the 2026 monsoon season.</div>
+            <div class="cc-prog-wrap"><div class="cc-prog-bar gold" style="width:18%;"></div></div>
+            <div class="cc-amounts"><span class="cc-raised">₹18,000 raised</span><span class="cc-goal">of ₹1,00,000</span></div>
+          </div>
+          <div class="cc-footer"><div class="cc-donors">👥 34 donors · 45 days left</div><button class="cc-donate-btn">Donate</button></div>
+        </div>
+      </div>
+      <div class="camp-row2">
+        <div class="camp-mini"><div class="camp-mini-title">💫 Project Udaan</div><div class="camp-mini-desc">Skill workshops for 100 women</div><div class="camp-mini-prog"><div class="camp-mini-fill" style="width:60%;background:var(--gold);"></div></div></div>
+        <div class="camp-mini"><div class="camp-mini-title">🐾 Project Jeev</div><div class="camp-mini-desc">Animal shelter & rescue fund</div><div class="camp-mini-prog"><div class="camp-mini-fill" style="width:38%;background:var(--forest-mid);"></div></div></div>
+        <div class="camp-mini"><div class="camp-mini-title">🎓 Project Vikas</div><div class="camp-mini-desc">Youth internship programme</div><div class="camp-mini-prog"><div class="camp-mini-fill" style="width:82%;background:var(--sage);"></div></div></div>
+        <div class="camp-mini" style="background:var(--forest);border-color:var(--sage);justify-content:center;align-items:center;text-align:center;color:var(--cream);">
+          <div style="font-size:1.5rem;margin-bottom:6px;">+</div>
+          <div style="font-size:.78rem;font-weight:700;">Start a Campaign</div>
+          <div style="font-size:.68rem;color:var(--mint);margin-top:2px;">Fundraise for a cause</div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><strong>Design Note:</strong> Priority order — Urgent → Active → New. Progress bars + countdown creates FOMO and drives donations. Mini cards for all 6 projects ensure complete visibility.</div>
+  </div>
+</div>
+
+<!-- ══════ SUMMARY ══════ -->
+<div class="frame-label">Summary Slide</div>
+<div class="frame reveal">
+  <div class="summary-frame">
+    <div class="sf-title">5 Features. One<br/><em>Powerful</em> NGO Website.</div>
+    <div class="sf-sub">Each feature was chosen based on real UX research and NGO best practices. Together they transform a basic website into a trust-building, donation-generating, volunteer-attracting platform.</div>
+    <div class="sf-grid stagger">
+      <div class="sf-item"><span class="sf-icon">💳</span><div class="sf-feat">Donation Section</div><div class="sf-tag">Revenue · Trust</div></div>
+      <div class="sf-item"><span class="sf-icon">🤝</span><div class="sf-feat">Volunteer Form</div><div class="sf-tag">Community · Growth</div></div>
+      <div class="sf-item"><span class="sf-icon">📊</span><div class="sf-feat">Impact Showcase</div><div class="sf-tag">Credibility · Data</div></div>
+      <div class="sf-item"><span class="sf-icon">💬</span><div class="sf-feat">Testimonials</div><div class="sf-tag">Social Proof · Emotion</div></div>
+      <div class="sf-item"><span class="sf-icon">🎯</span><div class="sf-feat">Campaigns</div><div class="sf-tag">Urgency · Action</div></div>
+    </div>
+    <div class="sf-bottom">
+      <div class="sf-credit">
+        Designed by <strong>Divya Kondameedi</strong> · Web Development Intern · InAmigos Foundation 2026<br/>
+        <span style="margin-top:6px;display:block;">#InAmigos #UnitingMindsForAChange #NGOWebDesign #Task4 #Figma</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end canvas -->
+
+<script>
+/* ── SCROLL PROGRESS BAR ── */
+window.addEventListener('scroll',()=>{
+  const doc=document.documentElement;
+  const pct=(doc.scrollTop/(doc.scrollHeight-doc.clientHeight))*100;
+  document.getElementById('scrollBar').style.width=pct+'%';
+  document.getElementById('backTop').classList.toggle('show',doc.scrollTop>400);
+});
+
+/* ── INTERSECTION OBSERVER (reveal on scroll) ── */
+const revealOpts={threshold:.08,rootMargin:'0px 0px -40px 0px'};
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // stagger children
+      if(e.target.classList.contains('stagger')){
+        e.target.querySelectorAll(':scope > *').forEach((child,i)=>{
+          child.style.transitionDelay=(i*0.1+0.05)+'s';
+          child.style.opacity='1';
+          child.style.transform='translateY(0)';
+        });
+      }
+      observer.unobserve(e.target);
+    }
+  });
+},revealOpts);
+
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale,.stagger').forEach(el=>{
+  observer.observe(el);
+});
+
+/* ── DONATION AMOUNT PICKER ── */
+document.querySelectorAll('.don-amt').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    this.closest('.don-amounts').querySelectorAll('.don-amt').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    // ripple effect
+    const r=document.createElement('span');
+    r.style.cssText=`position:absolute;width:100%;height:100%;border-radius:inherit;background:rgba(82,183,136,.3);animation:ripple .4s ease-out forwards;pointer-events:none;top:0;left:0;`;
+    this.style.position='relative';this.style.overflow='hidden';
+    this.appendChild(r);setTimeout(()=>r.remove(),450);
+  });
+});
+
+/* ── DONATION FREQUENCY PICKER ── */
+document.querySelectorAll('.don-f').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    this.closest('.don-freq').querySelectorAll('.don-f').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* ── SMOOTH FRAME ENTRANCE ── */
+document.querySelectorAll('.frame').forEach((frame,i)=>{
+  frame.style.animationDelay=(i*0.08)+'s';
+});
+
+/* ── COUNTER ANIMATION ── */
+function animateCounter(el,target,suffix){
+  let start=0;
+  const step=Math.ceil(target/60);
+  const timer=setInterval(()=>{
+    start+=step;
+    if(start>=target){start=target;clearInterval(timer);}
+    el.textContent=start.toLocaleString('en-IN')+suffix;
+  },25);
+}
+const counterObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const text=e.target.textContent;
+      const num=parseInt(text.replace(/\D/g,''));
+      const suffix=text.includes('K')?' K+':text.includes('+') ? '+':'';
+      if(!isNaN(num)){animateCounter(e.target,num,suffix);}
+      counterObs.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.imp-num,.vi-count-num').forEach(el=>counterObs.observe(el));
+</script>
+</body>
+</html>
